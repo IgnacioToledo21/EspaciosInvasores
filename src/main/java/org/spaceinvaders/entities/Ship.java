@@ -10,6 +10,7 @@ public class Ship {
     private double x, y;
     private final double velocidad = 10;
     private List<Projectile> projectiles = new ArrayList<>();
+    private int vidas = 3;
 
     public Ship() {
         this.x = 600;
@@ -37,6 +38,11 @@ public class Ship {
         projectiles.forEach(Projectile::update);
     }
 
+    public void reducirVida() {
+        vidas--;
+        System.out.println("La nave ha sido impactada. Vidas restantes: " + vidas);
+    }
+
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.GREEN);
         gc.fillRect(x, y, 40, 20);  // Cuerpo de la nave
@@ -60,5 +66,9 @@ public class Ship {
 
     public double getX() { return x; }
     public double getY() { return y; }
+
+    public int getVidas() {
+        return vidas;
+    }
 
 }

@@ -10,6 +10,8 @@ public class EnemyManager {
     private List<EnemyProjectile> enemyProjectiles = new ArrayList<>();
     private double direction = 1;
     private int shootingIndex = 0; // Índice del enemigo que dispara
+    private Timer enemyShootingTimer = new Timer(true);
+
 
     public EnemyManager() {
         createEnemies();
@@ -50,21 +52,18 @@ public class EnemyManager {
 
     //  Dispara cada 1 segundo un enemigo a la vez
     private void scheduleEnemyShots() {
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
+        enemyShootingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!enemies.isEmpty()) {
-                    // Seleccionar un enemigo aleatorio
                     int randomIndex = new Random().nextInt(enemies.size());
                     Enemy enemy = enemies.get(randomIndex);
-
-                    System.out.println("🎯 Enemigo aleatorio " + randomIndex + " disparando");
                     enemy.fireProjectile(enemyProjectiles);
                 }
             }
-        }, 1000, 1000); // Comienza tras 1s, y se repite cada 1s
+        }, 1000, 1000);
     }
+
 
 
 
@@ -109,7 +108,27 @@ public class EnemyManager {
         drawProjectiles(gc);
     }
 
+    public void stopEnemyShooting() {
+        enemyShootingTimer.cancel();
+        enemyShootingTimer.purge();
+    }
+
+
     public List<EnemyProjectile> getProjectiles() {
         return enemyProjectiles;
     }
+
+    //Comprobar colisiones con la nave del jugador
+    public void checkCollisionWithShip(Ship ship) {
+        Iterator<EnemyProjectile> iterator = enemyProjectiles.iterator();
+        while (iterator.hasNext()) {
+            EnemyProjectile projectile = iterator.next();
+            if (projectile.collidesWith(ship)) {
+                iterator.remove(); // Eliminar el proyectil al impactar
+                ship.reducirVida(); // Reducir una vida
+            }
+        }
+    }
+
+
 }

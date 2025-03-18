@@ -24,4 +24,13 @@ public class EnemyProjectile {
 
     public double getY() { return y; }
     public double getX() { return x; }
+
+    //Colisiones con la nave del jugador
+    public boolean collidesWith(Ship ship) {
+        return x < ship.getX() + 40 &&  // Ancho de la nave
+                x + 4 > ship.getX() &&   // Ancho del proyectil
+                y < ship.getY() + 20 &&  // Alto de la nave
+                y + 10 > ship.getY();    // Alto del proyectil
+    }
+
 }
