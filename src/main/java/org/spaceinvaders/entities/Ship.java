@@ -1,11 +1,15 @@
 package org.spaceinvaders.entities;
 
+import javafx.application.Application;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Ship {
+
+    private Image shipSprite;
 
     private double x, y;
     private final double velocidad = 10;
@@ -15,6 +19,10 @@ public class Ship {
     public Ship() {
         this.x = 600;
         this.y = 600;
+
+        //Cargar el sprite
+        shipSprite = new Image(getClass().getResourceAsStream("/images/NavePrincipal.png"));
+
     }
 
     public void moverIzquierda() {
@@ -44,16 +52,7 @@ public class Ship {
     }
 
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.GREEN);
-        gc.fillRect(x, y, 40, 20);  // Cuerpo de la nave
-        gc.setFill(Color.DARKGREEN);
-        gc.fillPolygon(
-                new double[]{x + 10, x + 20, x + 30},  // Coordenadas X
-                new double[]{y, y - 20, y},  // Coordenadas Y
-                3  // Triángulo superior de la nave
-        );
-
-        // Dibujar los proyectiles
+        gc.drawImage(shipSprite, x, y, 40, 40); // ✅ Usar el sprite en lugar del rectángulo
         gc.setFill(Color.RED);
         for (Projectile p : projectiles) {
             p.draw(gc);

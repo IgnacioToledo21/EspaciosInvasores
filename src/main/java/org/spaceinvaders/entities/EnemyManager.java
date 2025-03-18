@@ -51,7 +51,7 @@ public class EnemyManager {
     }
 
     //  Dispara cada 1 segundo un enemigo a la vez
-    private void scheduleEnemyShots() {
+    public void scheduleEnemyShots() {
         enemyShootingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

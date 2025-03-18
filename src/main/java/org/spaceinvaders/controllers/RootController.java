@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -15,6 +16,7 @@ import org.spaceinvaders.entities.EnemyManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class RootController implements Initializable {
@@ -107,22 +109,35 @@ public class RootController implements Initializable {
 
     private void gameOver() {
         gameOver = true; // 🚨 Marcar el juego como terminado
-
-        // Detener el temporizador de disparo de los enemigos
-        enemyManager.stopEnemyShooting();
+        enemyManager.stopEnemyShooting(); // Detener disparos enemigos
 
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Fin del Juego");
-            alert.setHeaderText(null);
-            alert.setContentText("💀 Has perdido 💀");
+            alert.setHeaderText("💀 Has perdido 💀");
+            alert.setContentText("¿Quieres reiniciar el juego o salir?");
 
-            alert.showAndWait(); // Mostrar el pop-up y esperar a que el usuario lo cierre
+            ButtonType botonReiniciar = new ButtonType("Reiniciar");
+            ButtonType botonSalir = new ButtonType("Salir");
 
-            System.exit(0); // Cerrar la aplicación después de que el usuario cierre el mensaje
+            alert.getButtonTypes().setAll(botonReiniciar, botonSalir);
+
+            Optional<ButtonType> resultado = alert.showAndWait();
+            if (resultado.isPresent() && resultado.get() == botonReiniciar) {
+                restartGame(); // Reiniciar el juego
+            } else {
+                System.exit(0); // Salir del juego
+            }
         });
     }
 
+    private void restartGame() {
+        gameOver = false; // Reactivar el juego
+        ship = new Ship(); // Crear nueva nave
+        enemyManager = new EnemyManager(); // Reiniciar enemigos
+        enemyManager.scheduleEnemyShots(); // Volver a iniciar los disparos
 
+        draw(); // Redibujar la pantalla
+    }
 
 }
