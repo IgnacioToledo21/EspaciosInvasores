@@ -23,10 +23,12 @@ public class EnemyManager {
         int cols = 10;
         double startX = 50;
         double startY = 50;
+        Random random = new Random();
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                enemies.add(new Enemy(startX + col * 50, startY + row * 40));
+                int tipo = random.nextInt(3) + 1;
+                enemies.add(new Enemy(startX + col * 50, startY + row * 40, tipo));
             }
         }
     }
@@ -74,9 +76,13 @@ public class EnemyManager {
         for (Enemy enemy : enemies) {
             for (Projectile projectile : playerProjectiles) {
                 if (projectile.collidesWith(enemy)) {
-                    enemiesToRemove.add(enemy);
+                    enemy.recibirImpacto();
                     projectilesToRemove.add(projectile);
-                    break;
+
+                    if (enemy.estaDestruido()) {
+                        enemiesToRemove.add(enemy);
+                    }
+                    break; // Un solo proyectil impacta a un enemigo
                 }
             }
         }
@@ -84,6 +90,7 @@ public class EnemyManager {
         enemies.removeAll(enemiesToRemove);
         playerProjectiles.removeAll(projectilesToRemove);
     }
+
 
     public void updateProjectiles(List<Projectile> playerProjectiles) {
         System.out.println("📌 Proyectiles enemigos en juego: " + enemyProjectiles.size());
@@ -119,16 +126,18 @@ public class EnemyManager {
     }
 
     //Comprobar colisiones con la nave del jugador
-    public void checkCollisionWithShip(Ship ship) {
+    public boolean checkCollisionWithShip(Ship ship) {
+        boolean impactado = false; // Variable para saber si hubo colisión
+
         Iterator<EnemyProjectile> iterator = enemyProjectiles.iterator();
         while (iterator.hasNext()) {
             EnemyProjectile projectile = iterator.next();
             if (projectile.collidesWith(ship)) {
                 iterator.remove(); // Eliminar el proyectil al impactar
-                ship.reducirVida(); // Reducir una vida
+                ship.reducirVida(); // Reducir una vida en la nave (opcional)
+                impactado = true; // Se detectó una colisión
             }
         }
+        return impactado; // ✅ Devuelve `true` si hubo colisión
     }
-
-
 }

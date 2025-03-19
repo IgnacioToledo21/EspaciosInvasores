@@ -1,21 +1,41 @@
 package org.spaceinvaders.entities;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import java.util.ArrayList;
+import javafx.scene.image.Image;
 import java.util.List;
 import java.util.Random;
 
 public class Enemy {
-
     private double x, y;
     private final double speed = 1;
-    private List<EnemyProjectile> projectiles = new ArrayList<>();
-    private Random random = new Random();
+    private int vida;
+    private Image frame1, frame2;
+    private boolean mostrarFrame1 = true; // Alternar entre los frames
+    private long ultimoCambioFrame = 0;
+    private static final long INTERVALO_ANIMACION = 500_000_000; // 0.5 segundos (500 ms)
 
-    public Enemy(double x, double y) {
+    public Enemy(double x, double y, int tipo) {
         this.x = x;
         this.y = y;
+
+        // Cargar los dos frames según el tipo de enemigo
+        switch (tipo) {
+            case 1:
+                this.vida = 1;
+                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-1.png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-2.png.png"));
+                break;
+            case 2:
+                this.vida = 2;
+                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero1png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero2png.png"));
+                break;
+            case 3:
+                this.vida = 3;
+                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-1.png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-2.png.png"));
+                break;
+        }
     }
 
     public void move(double direction) {
@@ -28,22 +48,30 @@ public class Enemy {
 
     public void fireProjectile(List<EnemyProjectile> globalProjectiles) {
         EnemyProjectile projectile = new EnemyProjectile(x + 13, y + 20);
-        globalProjectiles.add(projectile); // Ahora siempre se añade el proyectil
+        globalProjectiles.add(projectile);
     }
 
-
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.BLUE);
-        gc.fillRect(x, y, 30, 20); // Representación del enemigo
+        long tiempoActual = System.nanoTime();
 
-        // Dibujar los proyectiles disparados por este enemigo
-        gc.setFill(Color.ORANGE);
-        for (EnemyProjectile p : projectiles) {
-            p.draw(gc);
+        // Alternar entre frame1 y frame2 cada 0.5 segundos
+        if (tiempoActual - ultimoCambioFrame >= INTERVALO_ANIMACION) {
+            mostrarFrame1 = !mostrarFrame1;
+            ultimoCambioFrame = tiempoActual;
         }
+
+        // Dibujar el frame correspondiente
+        gc.drawImage(mostrarFrame1 ? frame1 : frame2, x, y, 40, 40);
+    }
+
+    public void recibirImpacto() {
+        vida--;
+    }
+
+    public boolean estaDestruido() {
+        return vida <= 0;
     }
 
     public double getX() { return x; }
     public double getY() { return y; }
-    public List<EnemyProjectile> getProjectiles() { return projectiles; }
 }

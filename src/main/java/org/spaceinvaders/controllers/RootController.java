@@ -11,6 +11,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import org.spaceinvaders.entities.Lives;
 import org.spaceinvaders.entities.Ship;
 import org.spaceinvaders.entities.EnemyManager;
 
@@ -33,6 +34,8 @@ public class RootController implements Initializable {
 
     private boolean gameOver = false; // Nueva variable para detener el juego
 
+    private Lives vidas;
+
 
     public RootController() {
         try {
@@ -48,6 +51,7 @@ public class RootController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = gameCanvas.getGraphicsContext2D();
         ship = new Ship();
+        vidas = new Lives();
         enemyManager = new EnemyManager();
 
         gameCanvas.setFocusTraversable(true);
@@ -79,21 +83,23 @@ public class RootController implements Initializable {
     }
 
     private void update() {
-        if (gameOver) return; // 🚨 Si el juego terminó, no actualizamos nada
+        if (gameOver) return; // ✅ Evita que el juego siga ejecutándose tras perder
 
         ship.updateProjectiles();
         enemyManager.moveEnemies();
         enemyManager.updateProjectiles(ship.getProjectiles());
-        enemyManager.checkCollisionWithShip(ship); // Verificar impacto en la nave
 
-        if (ship.getVidas() <= 0) {
+        if (enemyManager.checkCollisionWithShip(ship)) {
+            vidas.reducirVida();
+        }
+
+        if (vidas.getVidas() <= 0) {
             gameOver();
-            return; // Detener el bucle de actualización
+            return;
         }
 
         draw();
     }
-
 
 
     private void draw() {
@@ -102,42 +108,43 @@ public class RootController implements Initializable {
         enemyManager.draw(gc);
         enemyManager.drawProjectiles(gc); // Dibujar disparos enemigos
 
-        // Dibujar barra de vidas
-        gc.setFill(Color.BLACK);
-        gc.fillText("Vidas: " + ship.getVidas(), 20, 20);
+        vidas.draw(gc); // ✅ Ahora se dibujan las vidas desde la nueva clase
+
     }
 
     private void gameOver() {
-        gameOver = true; // 🚨 Marcar el juego como terminado
-        enemyManager.stopEnemyShooting(); // Detener disparos enemigos
+        gameOver = true; // ✅ Evita que el bucle de actualización siga corriendo
+        enemyManager.stopEnemyShooting(); // ✅ Detiene los disparos enemigos
 
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Fin del Juego");
             alert.setHeaderText("💀 Has perdido 💀");
-            alert.setContentText("¿Quieres reiniciar el juego o salir?");
+            alert.setContentText("¿Quieres reiniciar la partida?");
 
-            ButtonType botonReiniciar = new ButtonType("Reiniciar");
-            ButtonType botonSalir = new ButtonType("Salir");
+            ButtonType restartButton = new ButtonType("Reiniciar");
+            ButtonType exitButton = new ButtonType("Salir");
 
-            alert.getButtonTypes().setAll(botonReiniciar, botonSalir);
+            alert.getButtonTypes().setAll(restartButton, exitButton);
+            Optional<ButtonType> result = alert.showAndWait();
 
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == botonReiniciar) {
+            if (result.isPresent() && result.get() == restartButton) {
                 restartGame(); // Reiniciar el juego
             } else {
-                System.exit(0); // Salir del juego
+                System.exit(0); // Cerrar la aplicación
             }
         });
     }
 
     private void restartGame() {
-        gameOver = false; // Reactivar el juego
-        ship = new Ship(); // Crear nueva nave
-        enemyManager = new EnemyManager(); // Reiniciar enemigos
-        enemyManager.scheduleEnemyShots(); // Volver a iniciar los disparos
+        gameOver = false; // ✅ Reactivar el juego
+        ship = new Ship(); // ✅ Crear nueva nave
+        enemyManager = new EnemyManager(); // ✅ Reiniciar enemigos
+        enemyManager.scheduleEnemyShots(); // ✅ Volver a iniciar los disparos
+        vidas.reiniciar(); // ✅ Restaurar las 3 vidas
 
-        draw(); // Redibujar la pantalla
+        draw(); // ✅ Redibujar la pantalla
     }
+
 
 }
