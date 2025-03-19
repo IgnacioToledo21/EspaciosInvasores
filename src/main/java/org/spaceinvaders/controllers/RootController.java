@@ -1,5 +1,6 @@
 package org.spaceinvaders.controllers;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,17 +9,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import org.spaceinvaders.entities.Lives;
 import org.spaceinvaders.entities.Ship;
 import org.spaceinvaders.entities.EnemyManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class RootController implements Initializable {
 
@@ -29,13 +32,13 @@ public class RootController implements Initializable {
     private Canvas gameCanvas;
 
     private Ship ship;
+    private Lives vidas;
     private EnemyManager enemyManager;
     private GraphicsContext gc;
 
     private boolean gameOver = false; // Nueva variable para detener el juego
 
-    private Lives vidas;
-
+    private Set<KeyCode> keysPressed = new HashSet<>();
 
     public RootController() {
         try {
@@ -55,19 +58,19 @@ public class RootController implements Initializable {
         enemyManager = new EnemyManager();
 
         gameCanvas.setFocusTraversable(true);
-        gameCanvas.setOnKeyPressed(this::handleKeyPressed);
 
-        // Bucle de juego
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(16);  // Aproximadamente 60 FPS
-                    update();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        // Almacenar teclas presionadas
+        gameCanvas.setOnKeyPressed(event -> keysPressed.add(event.getCode()));
+        gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
+
+        // Bucle de juego utilizando AnimationTimer
+        AnimationTimer gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
             }
-        }).start();
+        };
+        gameLoop.start();
     }
 
     public BorderPane getRoot() {
@@ -83,7 +86,18 @@ public class RootController implements Initializable {
     }
 
     private void update() {
-        if (gameOver) return; // ✅ Evita que el juego siga ejecutándose tras perder
+        if (gameOver) return; // Detener el juego si se ha perdido
+
+        // Movimiento fluido
+        if (keysPressed.contains(KeyCode.LEFT)) {
+            ship.moverIzquierda();
+        }
+        if (keysPressed.contains(KeyCode.RIGHT)) {
+            ship.moverDerecha();
+        }
+        if (keysPressed.contains(KeyCode.SPACE)) {
+            ship.fireProjectile();
+        }
 
         ship.updateProjectiles();
         enemyManager.moveEnemies();
@@ -101,7 +115,6 @@ public class RootController implements Initializable {
         draw();
     }
 
-
     private void draw() {
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
         ship.draw(gc);
@@ -109,7 +122,6 @@ public class RootController implements Initializable {
         enemyManager.drawProjectiles(gc); // Dibujar disparos enemigos
 
         vidas.draw(gc); // ✅ Ahora se dibujan las vidas desde la nueva clase
-
     }
 
     private void gameOver() {
@@ -137,14 +149,12 @@ public class RootController implements Initializable {
     }
 
     private void restartGame() {
-        gameOver = false; // ✅ Reactivar el juego
-        ship = new Ship(); // ✅ Crear nueva nave
-        enemyManager = new EnemyManager(); // ✅ Reiniciar enemigos
-        enemyManager.scheduleEnemyShots(); // ✅ Volver a iniciar los disparos
-        vidas.reiniciar(); // ✅ Restaurar las 3 vidas
-
-        draw(); // ✅ Redibujar la pantalla
+        gameOver = false;
+        keysPressed.clear(); // ✅ Detener movimiento automático
+        ship = new Ship();
+        enemyManager = new EnemyManager();
+        enemyManager.scheduleEnemyShots();
+        vidas.reiniciar();
+        draw();
     }
-
-
 }

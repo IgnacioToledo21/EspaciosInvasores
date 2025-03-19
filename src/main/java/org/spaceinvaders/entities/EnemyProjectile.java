@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class EnemyProjectile {
     private double x, y;
-    private final double speed = 3;
+    private final double speed = 1.5;
     private Image enemyProjectileSprite;
 
     public EnemyProjectile(double x, double y) {

@@ -7,12 +7,12 @@ import java.util.Random;
 
 public class Enemy {
     private double x, y;
-    private final double speed = 1;
+    private final double speed = 0.5;
     private int vida;
     private Image frame1, frame2;
     private boolean mostrarFrame1 = true; // Alternar entre los frames
     private long ultimoCambioFrame = 0;
-    private static final long INTERVALO_ANIMACION = 500_000_000; // 0.5 segundos (500 ms)
+    private static final long INTERVALO_ANIMACION = 500; // 0.5 segundos (500 ms)
 
     public Enemy(double x, double y, int tipo) {
         this.x = x;
@@ -52,7 +52,7 @@ public class Enemy {
     }
 
     public void draw(GraphicsContext gc) {
-        long tiempoActual = System.nanoTime();
+        long tiempoActual = System.currentTimeMillis();
 
         // Alternar entre frame1 y frame2 cada 0.5 segundos
         if (tiempoActual - ultimoCambioFrame >= INTERVALO_ANIMACION) {

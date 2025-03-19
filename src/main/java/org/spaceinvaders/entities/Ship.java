@@ -12,9 +12,12 @@ public class Ship {
     private Image shipSprite;
 
     private double x, y;
-    private final double velocidad = 10;
+    private final double velocidad = 2;
     private List<Projectile> projectiles = new ArrayList<>();
     private int vidas = 3;
+
+    private long lastShotTime = 0;
+    private final long SHOOT_COOLDOWN = 1000; // 1 segundo de cooldown
 
     public Ship() {
         this.x = 600;
@@ -38,7 +41,11 @@ public class Ship {
     }
 
     public void fireProjectile() {
-        projectiles.add(new Projectile(x + 18, y - 10));
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastShotTime >= SHOOT_COOLDOWN) {
+            projectiles.add(new Projectile(x + 18, y - 10));
+            lastShotTime = currentTime;
+        }
     }
 
     public void updateProjectiles() {
