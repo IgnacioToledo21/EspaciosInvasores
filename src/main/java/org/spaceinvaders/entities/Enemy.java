@@ -2,10 +2,14 @@ package org.spaceinvaders.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
 import java.util.List;
 import java.util.Random;
 
 public class Enemy {
+
+    //Variables de enemigos
     private double x, y;
     private final double speed = 0.5;
     private int vida;
@@ -14,6 +18,7 @@ public class Enemy {
     private long ultimoCambioFrame = 0;
     private static final long INTERVALO_ANIMACION = 500; // 0.5 segundos (500 ms)
 
+    // Constructor del enemigo
     public Enemy(double x, double y, int tipo) {
         this.x = x;
         this.y = y;
@@ -51,19 +56,6 @@ public class Enemy {
         globalProjectiles.add(projectile);
     }
 
-    public void draw(GraphicsContext gc) {
-        long tiempoActual = System.currentTimeMillis();
-
-        // Alternar entre frame1 y frame2 cada 0.5 segundos
-        if (tiempoActual - ultimoCambioFrame >= INTERVALO_ANIMACION) {
-            mostrarFrame1 = !mostrarFrame1;
-            ultimoCambioFrame = tiempoActual;
-        }
-
-        // Dibujar el frame correspondiente
-        gc.drawImage(mostrarFrame1 ? frame1 : frame2, x, y, 40, 40);
-    }
-
     public void recibirImpacto() {
         vida--;
     }
@@ -74,4 +66,27 @@ public class Enemy {
 
     public double getX() { return x; }
     public double getY() { return y; }
+
+
+    //Dibujar enemigos
+    public void draw(GraphicsContext gc) {
+        long tiempoActual = System.currentTimeMillis();
+
+        // Alternar entre frame1 y frame2 cada 0.5 segundos
+        if (tiempoActual - ultimoCambioFrame >= INTERVALO_ANIMACION) {
+            mostrarFrame1 = !mostrarFrame1;
+            ultimoCambioFrame = tiempoActual;
+        }
+
+//        // Dibujar un rectángulo rojo en lugar de los frames
+//        gc.setFill(Color.RED);
+//        gc.fillRect(x, y, 30, 30);
+
+//        // Dibujar el borde de la hitbox
+//        gc.setStroke(Color.BLACK);
+//        gc.strokeRect(x, y, 30, 30);
+
+        // Dibujar el frame correspondiente
+        gc.drawImage(mostrarFrame1 ? frame1 : frame2, x, y, 30, 30);
+    }
 }
