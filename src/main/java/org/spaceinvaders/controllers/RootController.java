@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -61,6 +62,8 @@ public class RootController implements Initializable {
 
     private Boss boss;
 
+    private ScoreBoardController scoreBoardController;
+
     public RootController() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
@@ -71,8 +74,14 @@ public class RootController implements Initializable {
         }
     }
 
+    public Ship getShip() {
+        return ship;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        scoreBoardController = new ScoreBoardController();
+
         background = new Image(getClass().getResourceAsStream("/images/FondoJuego.jpg"));
         gc = gameCanvas.getGraphicsContext2D();
         ship = new Ship();
@@ -210,26 +219,53 @@ public class RootController implements Initializable {
 
 
     public void bossDefeated() {
-        stopGameLoop(); //Detener el GameLoop antes de mostrar el pop-up
+        stopGameLoop();
 
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("¡Enhorabuena!");
             alert.setHeaderText("🎉 Has derrotado al Boss 🎉");
-            alert.setContentText("¿Quieres volver a jugar o salir?");
+            alert.setContentText("¿Quieres revisar la puntuación o salir del juego?");
 
-            ButtonType restartButton = new ButtonType("Volver a jugar");
-            ButtonType exitButton = new ButtonType("Salir");
+            ButtonType reviewButton = new ButtonType("Revisar Puntuaciones");
+            ButtonType exitButton = new ButtonType("Salir del juego");
 
-            alert.getButtonTypes().setAll(restartButton, exitButton);
+            alert.getButtonTypes().setAll(reviewButton, exitButton);
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (result.isPresent() && result.get() == restartButton) {
-                restartGame(); // ✅ Reiniciar el juego
-            } else {
-                System.exit(0); // ✅ Salir del juego
+            if (result.isPresent() && result.get() == reviewButton) {
+                String playerName = promptForName(); // Metodo para pedir el nombre del jugador
+                int finalScore = ship.getScore();    // Puntuación final del jugador
+                int vidasRestantes = vidas.getVidas(); // Vidas restantes al derrotar al Boss
+
+                System.out.println("🏆 Puntuación TOTAL FINAL: " + finalScore);
+
+                // Crear el objeto ScoreEntry con la puntuación final
+                ScoreEntry newScore = new ScoreEntry(playerName, finalScore, vidasRestantes);
+
+                // Añadir el ScoreEntry al controlador de puntuaciones (ScoreBoardController)
+                scoreBoardController.addScoreEntry(newScore);
+
+                // Guardar las puntuaciones en el archivo JSON
+                ScoreManager.saveScores(scoreBoardController.getScoreList());
+
+                // Mostrar la pantalla de puntuaciones
+                root.setCenter(scoreBoardController.getRoot());
+            } else if (result.isPresent() && result.get() == exitButton) {
+                System.exit(0);
             }
         });
+    }
+
+
+    private String promptForName() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nombre del Jugador");
+        dialog.setHeaderText("Introduce tu nombre para la tabla de puntuaciones:");
+        dialog.setContentText("Nombre:");
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse("Jugador Anónimo");
     }
 
     public void startGameLoop() {
@@ -314,19 +350,20 @@ public class RootController implements Initializable {
             btnFaseFinal.setStyle("-fx-font-size: 20px; -fx-background-color: #FF0000; -fx-text-fill: black; -fx-padding: 10px;");
 
             btnFaseFinal.setOnAction(e -> {
-                root.setBottom(null); // Eliminar el botón
-                root.setCenter(gameCanvas); // Asegurar que el Canvas se mantenga visible
+                root.setBottom(null); // ✅ Eliminar el botón
+                root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
-                boss = new Boss(550, 50); // Generar el jefe final
-                resumeGame(); // Reanudar el juego
+                enemyManager.iniciarBossFinal(); // ✅ Llamar método para generar el Boss
+                resumeGame(); // ✅ Reanudar el juego
             });
 
             VBox vbox = new VBox(20, btnFaseFinal);
             vbox.setAlignment(Pos.CENTER);
             vbox.setStyle("-fx-padding: 20px; -fx-border-insets: 20px; -fx-background-insets: 20px;");
-            root.setBottom(vbox); // Mostrar el botón en la parte inferior del BorderPane
+            root.setBottom(vbox); // ✅ Mostrar el botón en la parte inferior del BorderPane
         });
     }
+
 
 
     public void stopGame() {

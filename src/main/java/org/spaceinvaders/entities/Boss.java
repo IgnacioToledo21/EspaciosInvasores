@@ -33,6 +33,10 @@ public class Boss {
         }
     }
 
+    public int getPoints() {
+        return 1000;
+    }
+
     // Disparar proyectil
     public void fireProjectile(List<EnemyProjectile> globalProjectiles) {
         globalProjectiles.add(new EnemyProjectile(x + 50, y + 80));

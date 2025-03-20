@@ -13,6 +13,9 @@ public class Enemy {
     private double x, y;
     private final double speed = 0.5;
     private int vida;
+
+    private int puntosBase; // ✅ Nueva variable fija para puntos
+
     private Image frame1, frame2;
     private boolean mostrarFrame1 = true; // Alternar entre los frames
     private long ultimoCambioFrame = 0;
@@ -27,20 +30,27 @@ public class Enemy {
         switch (tipo) {
             case 1:
                 this.vida = 1;
+                this.puntosBase = 5;
                 frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-1.png.png"));
                 frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-2.png.png"));
                 break;
             case 2:
                 this.vida = 2;
+                this.puntosBase = 10;
                 frame1 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero1png.png"));
                 frame2 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero2png.png"));
                 break;
             case 3:
                 this.vida = 3;
+                this.puntosBase = 50;
                 frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-1.png.png"));
                 frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-2.png.png"));
                 break;
         }
+    }
+
+    public int getPoints() {
+            return puntosBase;
     }
 
     public void move(double direction) {

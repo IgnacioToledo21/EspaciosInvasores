@@ -25,6 +25,9 @@ public class Ship {
     private long lastShotTime = 0;
     private final long SHOOT_COOLDOWN = 0000; // 0.8 segundos de cooldown
 
+    //Puntuacion de la nave
+    private int score = 0;
+
     //Constructor de la nave
     public Ship() {
         this.x = 600;
@@ -99,5 +102,13 @@ public class Ship {
 
     public double getX() { return x; }
     public double getY() { return y; }
+
+    public int getScore() { // Add getScore method
+        return score;
+    }
+
+    public void addScore(int points) { // Add method to increase score
+        score += points;
+    }
 
 }

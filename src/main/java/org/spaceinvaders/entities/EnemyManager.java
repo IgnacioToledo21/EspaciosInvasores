@@ -126,9 +126,6 @@ public class EnemyManager {
                     rootController.mostrarMensajeOleada("Has llegado al boss!");
                     rootController.mostrarBotonFaseFinal();
                 });
-            } else if (boss == null && !bossDerrotado) {
-                boss = new Boss(550, 50);
-                System.out.println("👹 ¡Ha aparecido el jefe final!");
             }
         }
     }
@@ -141,6 +138,14 @@ public class EnemyManager {
         createEnemies(); //Generar nuevos enemigos
         scheduleEnemyShots(); //Comenzar disparos enemigos
     }
+
+    public void iniciarBossFinal() {
+        if (boss == null) { // ✅ Asegurar que no se cree múltiples veces
+            boss = new Boss(550, 50);
+            System.out.println("👹 ¡Ha aparecido el jefe final!");
+        }
+    }
+
 
     //Actualizar proyectiles
     public void updateProjectiles(List<Projectile> playerProjectiles) {
@@ -207,6 +212,12 @@ public class EnemyManager {
 
                     if (enemy.estaDestruido()) {
                         enemiesToRemove.add(enemy);
+                        int puntos = enemy.getPoints();
+
+                        rootController.getShip().addScore(puntos); // ✅ Sumar puntos a la nave
+                        System.out.println("🔥 Enemigo derrotado: +" + puntos + " puntos");
+                        System.out.println("🏆 Puntuación acumulada: " + rootController.getShip().getScore()); // Add points to the player's score
+
                     }
                     break; // Un solo proyectil impacta a un enemigo
                 }
@@ -229,6 +240,13 @@ public class EnemyManager {
                 System.out.println("🔥 Boss impactado. Vida restante: " + boss.getVida());
 
                 if (boss.estaDestruido()) {
+
+
+                    int puntosBoss = boss.getPoints(); // ✅ Puntos del Boss
+                    rootController.getShip().addScore(puntosBoss); // ✅ Sumar puntos del Boss a los obtenidos antes
+
+                    System.out.println("🏆 Puntuación final (Enemigos + Boss): " + rootController.getShip().getScore());
+
                     boss = null;
                     bossDerrotado = true;
                     System.out.println("🎉 ¡Has derrotado al jefe! ¡Nivel completado!");
