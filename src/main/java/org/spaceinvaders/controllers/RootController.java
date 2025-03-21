@@ -1,8 +1,6 @@
 package org.spaceinvaders.controllers;
 
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,7 +80,7 @@ public class RootController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         scoreBoardController = new ScoreBoardController();
 
-        background = new Image(getClass().getResourceAsStream("/images/FondoJuego.jpg"));
+        background = new Image(getClass().getResourceAsStream("/images/FondoJuegoCasas1200x1400.jpg"));
         gc = gameCanvas.getGraphicsContext2D();
         ship = new Ship();
         vidas = new Lives();
@@ -287,24 +285,26 @@ public class RootController implements Initializable {
     }
 
     public void mostrarMensajeOleada(String mensaje) {
-        Text textoOleada = new Text(mensaje);
-        textoOleada.setFont(Font.font("Arial", FontWeight.BOLD, 50));
-        textoOleada.setFill(Color.BLACK);
+        Text textoOleada = new Text();
+        textoOleada.setFont(Font.font("Press Start 2P Regular", 50));
+        textoOleada.setFill(Color.WHITE);
 
-        // Efecto de aparición/desaparición
-        FadeTransition fade = new FadeTransition(Duration.seconds(1), textoOleada);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.3);
-        fade.setCycleCount(Animation.INDEFINITE);
-        fade.setAutoReverse(true);
-        fade.play();
+        root.setCenter(textoOleada); // ✅ Colocamos el texto en el centro del BorderPane
 
-        root.setCenter(textoOleada); // ✅ Agregamos el mensaje en el centro del BorderPane
+        Timeline timeline = new Timeline();
+        for (int i = 0; i < mensaje.length(); i++) {
+            final int index = i;
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(100 * index), e -> {
+                textoOleada.setText(mensaje.substring(0, index + 1));
+            }));
+        }
+
+        timeline.play();
     }
 
     public void mostrarBotonReady() {
         Button btnReady = new Button("READY");
-        btnReady.setStyle("-fx-font-size: 20px; -fx-background-color: #00FF00; -fx-text-fill: black; -fx-padding: 10px;");
+        btnReady.setStyle("-fx-font-size: 20px; -fx-background-color: #00FF00; -fx-text-fill: black; -fx-padding: 10px; -fx-font-family: 'Press Start 2P Regular';");
 
         btnReady.setOnAction(e -> {
             esperandoReady = false; // ✅ Permitir que la oleada comience
@@ -353,7 +353,7 @@ public class RootController implements Initializable {
                 root.setBottom(null); // ✅ Eliminar el botón
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
-                enemyManager.iniciarBossFinal(); // ✅ Llamar método para generar el Boss
+                enemyManager.iniciarBossFinal(); // ✅ Llamar metodo para generar el Boss
                 resumeGame(); // ✅ Reanudar el juego
             });
 
@@ -363,8 +363,6 @@ public class RootController implements Initializable {
             root.setBottom(vbox); // ✅ Mostrar el botón en la parte inferior del BorderPane
         });
     }
-
-
 
     public void stopGame() {
         if (gameTimer != null) {

@@ -1,0 +1,62 @@
+/* Estilo para el fondo del BorderPane */
+.root {
+    -fx-background-color: black;
+}
+
+@font-face {
+    font-family: 'Press Start 2P Regular';
+    src: url('/fonts/PressStart2P-Regular.ttf');
+}
+
+.rainbow-label {
+-fx-font-family: 'Press Start 2P Regular';
+}
+
+/* Fondo de toda la tabla */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+/* Celdas */
+.table-cell {
+    -fx-font-family: 'Press Start 2P';
+    -fx-font-size: 18px;
+    -fx-alignment: center;
+    -fx-background-color: black;
+    -fx-border-color: transparent; /* Elimina líneas blancas */
+    -fx-text-fill: white; /* Asegura que el texto sea visible */
+
+}
+
+/* Filas */
+.table-row-cell {
+    -fx-background-color: transparent;
+        -fx-text-fill: white; /* Asegura que el texto sea visible */
+
+}
+
+/* Quitar el borde de las celdas para evitar líneas blancas */
+.table-row-cell .table-cell {
+    -fx-border-color: transparent;
+}
+
+/* Encabezados de las columnas */
+.column-header {
+    -fx-background-color: black !important; /* Fondo negro */
+    -fx-text-fill: white !important; /* Texto blanco */
+    -fx-font-family: 'Press Start 2P';
+    -fx-font-size: 20px;
+}
+
+/* Asegurar que el texto dentro de los encabezados sea blanco */
+.column-header .label {
+    -fx-text-fill: white !important;
+    -fx-font-weight: bold;
+}
+
+
+
+
+
+
+
