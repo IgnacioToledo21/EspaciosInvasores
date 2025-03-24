@@ -135,6 +135,10 @@ public class EnemyManager {
         oleada++; //Incrementar oleada
         enemigosQueDisparan++; //Aumentar disparos de los enemigos
 
+        // Limpiar las listas de proyectiles
+        enemyProjectiles.clear();
+        rootController.getShip().getProjectiles().clear();
+
         createEnemies(); //Generar nuevos enemigos
         scheduleEnemyShots(); //Comenzar disparos enemigos
     }
@@ -143,6 +147,10 @@ public class EnemyManager {
         if (boss == null) { // ✅ Asegurar que no se cree múltiples veces
             boss = new Boss(550, 50);
             System.out.println("👹 ¡Ha aparecido el jefe final!");
+
+            // Limpiar las listas de proyectiles
+            enemyProjectiles.clear();
+            rootController.getShip().getProjectiles().clear();
         }
     }
 
@@ -251,6 +259,7 @@ public class EnemyManager {
                     bossDerrotado = true;
                     System.out.println("🎉 ¡Has derrotado al jefe! ¡Nivel completado!");
                     rootController.bossDefeated();
+                    break;
                 }
             }
         }
