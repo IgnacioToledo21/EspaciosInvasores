@@ -3,17 +3,20 @@ package org.spaceinvaders.entities;
 public class Contador {
     private long startTime;
     private long endTime;
+    private boolean running = false;
 
     public void start() {
         startTime = System.currentTimeMillis();
+        running = true;
     }
 
     public void stop() {
         endTime = System.currentTimeMillis();
+        running = false;
     }
 
     public long getElapsedTime() {
-        return endTime - startTime;
+        return running ? System.currentTimeMillis() - startTime : endTime - startTime;
     }
 
     public String getFormattedElapsedTime() {

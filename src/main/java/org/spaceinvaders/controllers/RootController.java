@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.spaceinvaders.entities.*;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.URL;
@@ -56,6 +58,7 @@ public class RootController implements Initializable {
     private String playerName; //Variable para almacenar el nombre del jugador
 
     private Contador contador = new Contador(); //Contador
+    private Label timerLabel;
 
     private long lastUpdate = 0;
 
@@ -85,6 +88,7 @@ public class RootController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         scoreBoardController = new ScoreBoardController();
         scoreBoardController.setRootController(this); // Set the RootController reference
 
@@ -101,6 +105,7 @@ public class RootController implements Initializable {
 
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar mensaje al iniciar
         mostrarBotonReady(); // ✅ Mostrar botón READY al iniciar
+
     }
 
     //dibujar el fondo
@@ -158,6 +163,11 @@ public class RootController implements Initializable {
             enemyManager.draw(gc);
             vidas.draw(gc);
         }
+
+        // Dibujar el texto del contador en el Canvas
+        gc.setFont(Font.font("Press Start 2P Regular", FontWeight.NORMAL, 20));
+        gc.setFill(Color.WHITE);
+        gc.fillText(contador.getFormattedElapsedTime(), gameCanvas.getWidth() - 160, 30);
     }
 
     private void gameOver() {
