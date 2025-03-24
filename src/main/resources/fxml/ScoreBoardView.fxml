@@ -23,7 +23,7 @@
       </TableView>
    </center>
    <top>
-      <Label fx:id="ScoreTitle" styleClass="rainbow-label" text="Espacios Invasores" BorderPane.alignment="CENTER">
+      <Label fx:id="ScoreTitle" styleClass="rainbow-label" text="Espacios Invasores" BorderPane.alignment="CENTER" >
          <font>
             <Font size="30.0" />
          </font>

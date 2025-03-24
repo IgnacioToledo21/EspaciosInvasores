@@ -22,8 +22,10 @@ public class App extends Application {
             System.out.println("✅ Fuente cargada correctamente: " + font.getName());
         }
 
-
         rootController = new RootController();
+
+        // Asignar el RootController al UserData del Stage
+        primaryStage.setUserData(rootController);
 
         primaryStage.setTitle("Space Invaders");
         Scene scene = new Scene(rootController.getRoot(), 1200, 700);

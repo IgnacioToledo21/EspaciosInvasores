@@ -53,6 +53,9 @@ public class RootController implements Initializable {
     private final double BACKGROUND_SPEED = 0.05; // Velocidad de desplazamiento
 
     private AnimationTimer gameTimer; // Variable para el GameLoop
+    private String playerName; //Variable para almacenar el nombre del jugador
+
+    private Contador contador = new Contador(); //Contador
 
     private long lastUpdate = 0;
 
@@ -76,9 +79,15 @@ public class RootController implements Initializable {
         return ship;
     }
 
+    public Contador getContador() {
+        return contador;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         scoreBoardController = new ScoreBoardController();
+        scoreBoardController.setRootController(this); // Set the RootController reference
+
 
         background = new Image(getClass().getResourceAsStream("/images/FondoJuegoCasas1200x1400.jpg"));
         gc = gameCanvas.getGraphicsContext2D();
@@ -94,7 +103,6 @@ public class RootController implements Initializable {
         mostrarBotonReady(); // ✅ Mostrar botón READY al iniciar
     }
 
-
     //dibujar el fondo
     private void drawBackground(GraphicsContext gc) {
         backgroundY += BACKGROUND_SPEED; // Mueve el fondo hacia abajo
@@ -106,7 +114,6 @@ public class RootController implements Initializable {
         gc.drawImage(background, 0, backgroundY - gameCanvas.getHeight(), gameCanvas.getWidth(), gameCanvas.getHeight());
         gc.drawImage(background, 0, backgroundY, gameCanvas.getWidth(), gameCanvas.getHeight());
     }
-
 
     public BorderPane getRoot() {
         return root;
@@ -142,8 +149,6 @@ public class RootController implements Initializable {
         draw();
     }
 
-
-
     private void draw() {
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
         drawBackground(gc); //
@@ -154,8 +159,6 @@ public class RootController implements Initializable {
             vidas.draw(gc);
         }
     }
-
-
 
     private void gameOver() {
         gameOver = true; // ✅ Evita que el bucle de actualización siga corriendo
@@ -181,7 +184,7 @@ public class RootController implements Initializable {
         });
     }
 
-    private void restartGame() {
+    public void restartGame() {
         stopGameLoop(); // ✅ Detener completamente el bucle de animación ANTES de reiniciar
         enemyManager.stopEnemyShooting(); // ✅ Detener el Timer de disparos enemigos
 
@@ -218,6 +221,7 @@ public class RootController implements Initializable {
 
     public void bossDefeated() {
         stopGameLoop();
+        contador.stop();
 
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -255,7 +259,7 @@ public class RootController implements Initializable {
         });
     }
 
-
+    //SoLicitar y almacenar el nombre del jugador
     private String promptForName() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nombre del Jugador");
@@ -263,7 +267,12 @@ public class RootController implements Initializable {
         dialog.setContentText("Nombre:");
 
         Optional<String> result = dialog.showAndWait();
-        return result.orElse("Jugador Anónimo");
+        playerName = result.orElse("Jugador Anónimo"); // Almacenar el nombre del jugador
+        return playerName;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public void startGameLoop() {
@@ -314,7 +323,7 @@ public class RootController implements Initializable {
             if (!enemyManager.hayBoss() && enemyManager.getEnemies().isEmpty()) {
                 enemyManager.createEnemies(); // ✅ Generar enemigos si no hay ninguno
             }
-
+            contador.start();
             startGameLoop(); // ✅ Iniciar el juego
         });
 
