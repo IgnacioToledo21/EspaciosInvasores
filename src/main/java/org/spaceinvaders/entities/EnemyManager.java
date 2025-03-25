@@ -265,4 +265,10 @@ public class EnemyManager {
         }
         playerProjectiles.removeAll(projectilesToRemove);
     }
+
+    //Eliminar enemigos
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
+    }
+
 }

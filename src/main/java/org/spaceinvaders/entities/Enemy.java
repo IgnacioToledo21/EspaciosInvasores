@@ -1,5 +1,6 @@
 package org.spaceinvaders.entities;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -13,6 +14,10 @@ public class Enemy {
     private double x, y;
     private final double speed = 0.5;
     private int vida;
+
+    private final double width = 30;
+    private final double height = 30;
+
 
     private int puntosBase; // ✅ Nueva variable fija para puntos
 
@@ -99,4 +104,9 @@ public class Enemy {
         // Dibujar el frame correspondiente
         gc.drawImage(mostrarFrame1 ? frame1 : frame2, x, y, 30, 30);
     }
+
+    public Rectangle2D getBounds() {
+        return new Rectangle2D(x, y, width, height); // Ajusta width y height según el tamaño del enemigo
+    }
+
 }

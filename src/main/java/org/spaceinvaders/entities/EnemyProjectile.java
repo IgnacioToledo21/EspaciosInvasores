@@ -1,5 +1,6 @@
 package org.spaceinvaders.entities;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -9,6 +10,7 @@ public class EnemyProjectile {
     private double x, y;
     private final double speed = 1.5;
     private Image enemyProjectileSprite;
+    private boolean active = true;
 
     // Constructor del proyectil enemigo
     public EnemyProjectile(double x, double y) {
@@ -37,5 +39,19 @@ public class EnemyProjectile {
                 x + 10 > ship.getX() &&  // Ancho del proyectil ajustado
                 y < ship.getY() + 40 &&  // Alto de la nave
                 y + 20 > ship.getY();    // Alto del proyectil ajustado
+    }
+
+    public Rectangle2D getBounds() {
+        // Ajustar el rectángulo de colisión para que esté centrado en la bala
+        double offsetX = (40 - 20) / 2; // La diferencia entre el ancho del sprite y el ancho del rectángulo de colisión
+        return new Rectangle2D(x + offsetX, y, 20, 50);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

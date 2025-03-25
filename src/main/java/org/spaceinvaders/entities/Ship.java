@@ -1,6 +1,7 @@
 package org.spaceinvaders.entities;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -109,6 +110,10 @@ public class Ship {
 
     public void addScore(int points) { // Add method to increase score
         score += points;
+    }
+
+    public Rectangle2D getBounds() {
+        return new Rectangle2D(x, y, 50, 40); // Adjust width and height as needed
     }
 
 }

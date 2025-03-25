@@ -28,10 +28,7 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public class RootController implements Initializable {
 
@@ -68,6 +65,8 @@ public class RootController implements Initializable {
 
     private ScoreBoardController scoreBoardController;
 
+    private List<DefenseWall> defenseWalls; // Lista de muros de defensa
+
     public RootController() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
@@ -103,6 +102,14 @@ public class RootController implements Initializable {
         gameCanvas.setOnKeyPressed(event -> keysPressed.add(event.getCode()));
         gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
 
+        // Inicializar la lista de muros de defensa
+        defenseWalls = new ArrayList<>();
+        defenseWalls.add(new DefenseWall(200, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(400, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(600, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(800, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(1000, 500, 50, 40, 20));
+
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar mensaje al iniciar
         mostrarBotonReady(); // ✅ Mostrar botón READY al iniciar
 
@@ -125,9 +132,9 @@ public class RootController implements Initializable {
     }
 
     private void update() {
-        if (gameOver || esperandoReady) return; // ✅ No actualizar nada hasta presionar "READY"
+        if (gameOver || esperandoReady) return;
 
-        // Movimiento fluido
+        // Movimiento suave de la nave
         if (keysPressed.contains(KeyCode.LEFT)) {
             ship.moverIzquierda();
         }
@@ -142,6 +149,50 @@ public class RootController implements Initializable {
         enemyManager.moveEnemies();
         enemyManager.updateProjectiles(ship.getProjectiles());
 
+        // Verificar colisiones con los muros de defensa
+        Iterator<DefenseWall> wallIterator = defenseWalls.iterator();
+        while (wallIterator.hasNext()) {
+            DefenseWall wall = wallIterator.next();
+            if (!wall.estaDestruido()) {
+                // Verificamos colisión con las balas del jugador
+                Iterator<Projectile> iter = ship.getProjectiles().iterator();
+                while (iter.hasNext()) {
+                    Projectile projectile = iter.next();
+                    if (wall.checkCollision(projectile)) {
+                        iter.remove(); // Eliminamos la bala aliada si impacta en el muro
+                    }
+                }
+
+                // Verificamos colisión con las balas enemigas
+                Iterator<EnemyProjectile> enemyIter = enemyManager.getProjectiles().iterator();
+                while (enemyIter.hasNext()) {
+                    EnemyProjectile enemyProjectile = enemyIter.next();
+                    if (wall.checkCollision(enemyProjectile)) {
+                        enemyIter.remove(); // Eliminamos la bala enemiga si impacta en el muro
+                    }
+                }
+
+                // Verificar colisión con los enemigos
+                Iterator<Enemy> enemyIterator = enemyManager.getEnemies().iterator();
+                while (enemyIterator.hasNext()) {
+                    Enemy enemy = enemyIterator.next();
+                    if (wall.checkCollision(enemy)) {
+                        // Elimina al enemigo cuando colisiona con el muro
+                        enemyIterator.remove();
+                    }
+                }
+            }
+        }
+
+        // Verificación de colisión con la nave
+        for (Enemy enemy : enemyManager.getEnemies()) {
+            if (enemy.getBounds().intersects(ship.getBounds())) {
+                gameOver(); // Si colisiona con un enemigo, termina el juego
+                return;
+            }
+        }
+
+        // Verificación de colisión entre enemigos y la nave
         if (enemyManager.checkCollisionWithShip(ship)) {
             vidas.reducirVida();
         }
@@ -154,14 +205,22 @@ public class RootController implements Initializable {
         draw();
     }
 
+
     private void draw() {
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
-        drawBackground(gc); //
+        drawBackground(gc);
 
         if (!esperandoReady) {
             ship.draw(gc);
             enemyManager.draw(gc);
             vidas.draw(gc);
+
+            // Dibujar los muros de defensa con sprites
+            for (DefenseWall wall : defenseWalls) {
+                if (!wall.estaDestruido()) {
+                    gc.drawImage(wall.getCurrentImage(), wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
+                }
+            }
         }
 
         // Dibujar el texto del contador en el Canvas
@@ -220,12 +279,25 @@ public class RootController implements Initializable {
         ship.getProjectiles().clear();
         enemyManager.getProjectiles().clear();
 
+        // ✅ Reiniciar los muros de defensa
+        reiniciarMuros();
+
         // ✅ Asegurar que el canvas se vuelve a mostrar
         root.setCenter(gameCanvas);
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight()); // ✅ Limpiar pantalla antes de redibujar
 
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar el mensaje inicial
         mostrarBotonReady(); // ✅ Mostrar el botón READY
+    }
+
+    // Metodo para reiniciar los muros de defensa
+    private void reiniciarMuros() {
+        defenseWalls.clear();
+        defenseWalls.add(new DefenseWall(200, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(400, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(600, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(800, 500, 50, 40, 20));
+        defenseWalls.add(new DefenseWall(1000, 500, 50, 40, 20));
     }
 
 
@@ -352,6 +424,7 @@ public class RootController implements Initializable {
                 root.setBottom(null); // ✅ Eliminar el botón
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
+                reiniciarMuros(); // ✅ Reiniciar los muros de defensa
                 enemyManager.iniciarSiguienteOleada(); // ✅ Generar nuevos enemigos
                 resumeGame(); // ✅ Reanudar el juego
             });
@@ -372,6 +445,7 @@ public class RootController implements Initializable {
                 root.setBottom(null); // ✅ Eliminar el botón
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
+                reiniciarMuros(); // ✅ Reiniciar los muros de defensa
                 enemyManager.iniciarBossFinal(); // ✅ Llamar metodo para generar el Boss
                 resumeGame(); // ✅ Reanudar el juego
             });

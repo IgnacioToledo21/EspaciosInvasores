@@ -1,5 +1,6 @@
 package org.spaceinvaders.entities;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -8,6 +9,7 @@ public class Projectile {
     private double x, y;
     private double speed = 4;
     private Image projectileSprite;
+    private boolean active = true;
 
     // Constructor del proyectil
     public Projectile(double x, double y) {
@@ -50,5 +52,18 @@ public class Projectile {
                 x + 10 > boss.getX() &&
                 y < boss.getY() + 20 && //Ajuste para la altura del jefe
                 y + 20 > boss.getY();
+    }
+
+    // Obtener los límites del proyectil
+    public Rectangle2D getBounds() {
+        return new Rectangle2D(x, y, 40, 20);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
