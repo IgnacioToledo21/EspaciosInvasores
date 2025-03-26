@@ -102,22 +102,22 @@ public class ScoreBoardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         // Configurar la visibilidad del botón de reiniciar juego
         ReiniciarJuegoButton.setVisible(showRestartButton);
         DescargarDiplomaButton.setVisible(showDownloadButton);
 
+        // Cargar puntuaciones desde el archivo solo si la lista está vacía
+        if (scoreList.isEmpty()) {
+            List<ScoreEntry> scoresFromFile = ScoreManager.loadScores();
+            scoreList.addAll(scoresFromFile);
 
-        // Cargar puntuaciones desde el archivo
-        List<ScoreEntry> scoresFromFile = ScoreManager.loadScores();
-        scoreList.addAll(scoresFromFile);
+            // Ordenar la lista por puntuación en orden descendente
+            scoreList.sort(Comparator.comparingInt(ScoreEntry::getScore).reversed());
 
-        // Ordenar la lista por puntuación en orden descendente
-        scoreList.sort(Comparator.comparingInt(ScoreEntry::getScore).reversed());
-
-        // Limitar la lista a 15 entradas
-        if (scoreList.size() > 15) {
-            scoreList = FXCollections.observableArrayList(scoreList.subList(0, 15));
+            // Limitar la lista a 15 entradas
+            if (scoreList.size() > 15) {
+                scoreList = FXCollections.observableArrayList(scoreList.subList(0, 15));
+            }
         }
 
         NamesColumn.setCellValueFactory(cellData -> cellData.getValue().playerNameProperty());
