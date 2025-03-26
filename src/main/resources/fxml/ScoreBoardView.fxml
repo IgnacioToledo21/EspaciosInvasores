@@ -23,7 +23,7 @@
       </TableView>
    </center>
    <top>
-      <Label fx:id="ScoreTitle" styleClass="rainbow-label" text="Espacios Invasores" BorderPane.alignment="CENTER" >
+      <Label fx:id="ScoreTitle" styleClass="rainbow-label" text="Espacios Invasores" BorderPane.alignment="CENTER">
          <font>
             <Font size="30.0" />
          </font>
@@ -34,6 +34,7 @@
          <children>
             <Button fx:id="DescargarDiplomaButton" mnemonicParsing="false" onAction="#onDownloadButtonAction" text="Descargar Diploma" />
             <Button fx:id="ReiniciarJuegoButton" mnemonicParsing="false" onAction="#onResetButtonAction" text="Reiniciar Juego" />
+            <Button fx:id="VolverButton" mnemonicParsing="false" onAction="#onBackButtonAction" text="Volver" />
             <Button fx:id="SalirButton" mnemonicParsing="false" onAction="#onExitButtonAction" text="Salir" />
          </children>
       </HBox>

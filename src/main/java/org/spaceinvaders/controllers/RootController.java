@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.spaceinvaders.entities.*;
 import javafx.scene.control.Label;
@@ -101,6 +102,12 @@ public class RootController implements Initializable {
         gameCanvas.setFocusTraversable(true);
         gameCanvas.setOnKeyPressed(event -> keysPressed.add(event.getCode()));
         gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
+
+        // Asignar RootController a la ventana
+        Platform.runLater(() -> {
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.setUserData(this); // ✅ Esto permite que otros controladores accedan a RootController
+        });
 
         // Inicializar la lista de muros de defensa
         defenseWalls = new ArrayList<>();

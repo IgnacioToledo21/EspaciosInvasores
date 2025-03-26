@@ -1,14 +1,13 @@
 package org.spaceinvaders;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import org.spaceinvaders.controllers.RootController;
+import org.spaceinvaders.controllers.MainMenuController;
 
 public class App extends Application {
-
-    private static RootController rootController;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -22,13 +21,13 @@ public class App extends Application {
             System.out.println("✅ Fuente cargada correctamente: " + font.getName());
         }
 
-        rootController = new RootController();
-
-        // Asignar el RootController al UserData del Stage
-        primaryStage.setUserData(rootController);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainMenuView.fxml"));
+        MainMenuController mainMenuController = new MainMenuController();
+        loader.setController(mainMenuController);
+        primaryStage.setUserData(mainMenuController);
 
         primaryStage.setTitle("Space Invaders");
-        Scene scene = new Scene(rootController.getRoot(), 1200, 700);
+        Scene scene = new Scene(loader.load(), 1200, 700);
 
         // Cargar el archivo CSS para aplicar los estilos
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());

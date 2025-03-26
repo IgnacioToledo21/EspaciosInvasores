@@ -90,8 +90,52 @@
     -fx-padding: 10px;
 }
 
+/*MAIN MENU VIEW*/
 
+/* Estilo para los Labels */
+#titleGame, #optionGame {
+    -fx-font-family: 'Press Start 2P Regular';
+    -fx-font-size: 20px;
+}
 
+#optionGame {
+    -fx-text-fill:  #FF0000;
+}
+
+/* Estilo para los Botones */
+#PlayButton, #ScoreButton, #ExitButton, #SalirButton, #DescargarDiplomaButton, #ReiniciarJuegoButton, #VolverButton {
+    -fx-font-family: 'Press Start 2P Regular';
+    -fx-font-size: 16px;
+    -fx-background-color: #000000; /* Fondo negro */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-padding: 10px;
+    -fx-border-color: white; /* Borde blanco */
+    -fx-border-width: 2px;
+    -fx-transition: all 0.5s ease;
+}
+
+#PlayButton:hover, #ScoreButton:hover, #ExitButton:hover, #SalirButton:hover, #DescargarDiplomaButton:hover, #ReiniciarJuegoButton:hover, #VolverButton:hover  {
+    -fx-background-color: #808080; /* Fondo gris */
+    -fx-text-fill: black; /* Cambiar el color del texto al pasar el ratón */
+}
+
+#ScoretopLabel {
+    -fx-font-family: 'Press Start 2P';
+    -fx-text-fill: lime;
+
+}
+
+/* Estilo para la tabla LittleScoreTable */
+#LittleScoreTable .column-header,
+#LittleScoreTable .table-cell {
+    -fx-font-family: 'Press Start 2P';
+    -fx-font-size: 10px; /* Tamaño de letra más pequeño */
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent; /* Elimina líneas blancas */
+    -fx-text-fill: white; /* Asegura que el texto sea visible */
+}
+}
 
 
 

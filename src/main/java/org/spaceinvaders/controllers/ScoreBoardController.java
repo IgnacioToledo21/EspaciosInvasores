@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -60,6 +61,20 @@ public class ScoreBoardController implements Initializable {
     private Button ReiniciarJuegoButton;
 
     @FXML
+    private Button VolverButton;
+
+    private boolean showRestartButton = true; // Nueva propiedad
+    private boolean showDownloadButton = true; // New property
+
+
+    public void setShowRestartButton(boolean show) {
+        this.showRestartButton = show;
+    }
+    public void setShowDownloadButton(boolean show) {
+        this.showDownloadButton = show;
+    }
+
+    @FXML
     private Button SalirButton;
 
     @FXML
@@ -87,6 +102,12 @@ public class ScoreBoardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // Configurar la visibilidad del botón de reiniciar juego
+        ReiniciarJuegoButton.setVisible(showRestartButton);
+        DescargarDiplomaButton.setVisible(showDownloadButton);
+
+
         // Cargar puntuaciones desde el archivo
         List<ScoreEntry> scoresFromFile = ScoreManager.loadScores();
         scoreList.addAll(scoresFromFile);
@@ -275,7 +296,11 @@ public class ScoreBoardController implements Initializable {
         System.out.println("Botón de descarga presionado");
 
         // Obtener el nombre del jugador desde el controlador principal
-        RootController rootController = (RootController) ((Stage) ((Button) event.getSource()).getScene().getWindow()).getUserData();
+        if (rootController == null) {
+            System.err.println("⚠ RootController no ha sido asignado correctamente.");
+            return;
+        }
+
         String playerName = rootController.getPlayerName();  // Obtener el nombre del jugador
 
         // Obtener el tiempo total del contador
@@ -470,6 +495,26 @@ public class ScoreBoardController implements Initializable {
             rootController.restartGame();
         } else {
             System.err.println("RootController is not set.");
+        }
+    }
+
+    @FXML
+    void onBackButtonAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainMenuView.fxml"));
+            MainMenuController mainMenuController = new MainMenuController();
+            loader.setController(mainMenuController);
+
+            // Get the current stage
+            Stage stage = (Stage) root.getScene().getWindow();
+
+            // Load the main menu scene
+            Scene scene = new Scene(loader.load(), 1200, 700);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
