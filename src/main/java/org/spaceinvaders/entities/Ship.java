@@ -1,46 +1,73 @@
 package org.spaceinvaders.entities;
 
-import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.List;
+import org.spaceinvaders.controllers.RootController;
+
+import java.util.*;
 
 public class Ship {
 
-    //Cargar sprites
     private Image shipSprite;
     private Image projectileSprite;
+    private Image bombSprite;
+    private Image shieldSprite;
 
-    //Variables de posición
     private double x, y;
     private double velocidad = 2;
     private List<Projectile> projectiles = new ArrayList<>();
+    private List<PowerUps> bombs = new ArrayList<>();
 
-    //Vidas de la nave
     private int vidas = 3;
 
-    //Variables de tiempo de disparo
     private long lastShotTime = 0;
     private final long SHOOT_COOLDOWN = 0000; // 0.8 segundos de cooldown
 
-    //Puntuacion de la nave
+    private boolean shieldActive = false;
+    private Timer shieldTimer;
+
+    private boolean doubleShotActive = false;
+    private Timer doubleShotTimer;
+
+    private boolean bombActive = false;
+
     private int score = 0;
 
-    //Constructor de la nave
-    public Ship() {
+    private Inventory inventory;
+
+    private RootController rootController;
+
+
+    public void setRootController(RootController rootController) {
+        this.rootController = rootController;
+    }
+
+    public RootController getRootController() {
+        return rootController;
+    }
+
+    public Ship(Inventory inventory) {
         this.x = 600;
         this.y = 600;
 
-        //Cargar el sprite
-        shipSprite = new Image(getClass().getResourceAsStream("/images/NavePrincipal.png"));
+        shipSprite = new Image(getClass().getResourceAsStream("/images/Nave Principal40x50.png.png"));
         projectileSprite = new Image(getClass().getResourceAsStream("/images/Bala aliada-1.png.png"));
+        bombSprite = new Image(getClass().getResourceAsStream("/images/poderes/BOMBBASE.png"));
+        shieldSprite = new Image(getClass().getResourceAsStream("/images/poderes/SHIELD.png"));
+
+        this.inventory = inventory;
 
     }
 
-    //Metodos de movimiento de la nave
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     public void moverIzquierda() {
         if (x > 0) {
             x -= velocidad;
@@ -48,72 +75,209 @@ public class Ship {
     }
 
     public void moverDerecha() {
-        if (x < 1200 - 40) {  // Asegurar que no salga de la pantalla
+        if (x < 1200 - 40) {
             x += velocidad;
         }
     }
 
-    //Metodo de disparo
     public void fireProjectile() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastShotTime >= SHOOT_COOLDOWN) {
-            double projectileX = x + (shipSprite.getWidth() / 2) - (projectileSprite.getWidth() / 2);
-            double projectileY = y - projectileSprite.getHeight();
-            projectiles.add(new Projectile(projectileX, projectileY));
+            if (doubleShotActive) {
+                double projectileX1 = x;
+                double projectileX2 = x + shipSprite.getWidth() - projectileSprite.getWidth();
+                double projectileY = y - projectileSprite.getHeight();
+                projectiles.add(new Projectile(projectileX1, projectileY));
+                projectiles.add(new Projectile(projectileX2, projectileY));
+            } else {
+                double projectileX = x + (shipSprite.getWidth() / 2) - (projectileSprite.getWidth() / 2);
+                double projectileY = y - projectileSprite.getHeight();
+                projectiles.add(new Projectile(projectileX, projectileY));
+            }
             lastShotTime = currentTime;
         }
     }
 
-    //Metodo de actualización de proyectiles
+    public void fireBomb() {
+        if (inventory.hasBomb()) { // Verifica si hay una bomba en el inventario
+            double bombX = x + (shipSprite.getWidth() / 2) - (bombSprite.getWidth() / 2);
+            double bombY = y - bombSprite.getHeight();
+            PowerUps bomb = new PowerUps(bombX, bombY, PowerUps.PowerUpType.BOMB);
+            bombs.add(bomb);
+
+            inventory.useBomb(); // Asegura que la bomba se elimine del inventario
+            System.out.println("🔥 Bomba lanzada y eliminada del inventario.");
+        } else {
+            System.out.println("🚫 No hay bomba en el inventario.");
+        }
+    }
+
+
+
+    public void updateBombs(List<Enemy> enemies) {
+        Iterator<PowerUps> bombIterator = bombs.iterator();
+        while (bombIterator.hasNext()) {
+            PowerUps bomb = bombIterator.next();
+            bomb.update();
+            bomb.setY(bomb.getY() - 5); // Mover la bomba hacia arriba
+
+            if (bomb.getY() < 0) {
+                bombIterator.remove();
+                continue;
+            }
+
+            for (Enemy enemy : enemies) {
+                if (bomb.getBounds().intersects(new BoundingBox(enemy.getX(), enemy.getY(), enemy.getBounds().getWidth(), enemy.getBounds().getHeight()))) {
+                    activateBomb(bomb.getX(), bomb.getY()); // Llamar a la explosión en la ubicación de la bomba
+                    bombIterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+
     public void updateProjectiles() {
-        projectiles.removeIf(p -> p.getY() < 0); // Eliminar proyectiles fuera de la pantalla
+        projectiles.removeIf(p -> p.getY() < 0);
         projectiles.forEach(Projectile::update);
     }
 
-    //Metodo de reducción de vida
     public void reducirVida() {
-        vidas--;
-        System.out.println("La nave ha sido impactada. Vidas restantes: " + vidas);
+        if (!shieldActive) {
+            vidas--;
+            System.out.println("La nave ha sido impactada. Vidas restantes: " + vidas);
+        } else {
+            System.out.println("Impacto bloqueado por el escudo.");
+        }
     }
 
     public int getVidas() {
         return vidas;
     }
 
-    //Metodo de dibujo de la nave
     public void draw(GraphicsContext gc) {
-        gc.drawImage(shipSprite, x, y, 50, 40); // ✅ Usar el sprite en lugar del rectángulo
-
-        //gc.fillRect(x, y, 40, 40);
-        //gc.setFill(Color.RED);
+        if (shieldActive) {
+            gc.drawImage(shieldSprite, x, y, 50, 40);
+        } else {
+            gc.drawImage(shipSprite, x, y, 50, 40);
+        }
 
         for (Projectile p : projectiles) {
             p.draw(gc);
         }
+
+        for (PowerUps b : bombs) {
+            b.draw(gc);
+        }
     }
 
-    //Lista de proyectiles
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
 
     public void resetSpeed() {
-        velocidad = 2;  // Velocidad base de la nave
+        velocidad = 2;
+    }
+
+    public List<PowerUps> getBombs() {
+        return bombs;
     }
 
     public double getX() { return x; }
     public double getY() { return y; }
 
-    public int getScore() { // Add getScore method
+    public int getScore() {
         return score;
     }
 
-    public void addScore(int points) { // Add method to increase score
+    public void addScore(int points) {
         score += points;
     }
 
     public Rectangle2D getBounds() {
-        return new Rectangle2D(x, y, 50, 40); // Adjust width and height as needed
+        return new Rectangle2D(x, y, 50, 40);
     }
 
+    public boolean isShieldActive() {
+        return shieldActive;
+    }
+
+    public boolean isDoubleShotActive() {
+        return doubleShotActive;
+    }
+
+    public boolean isBombActive() {
+        return bombActive;
+    }
+
+    public void activateShield() {
+        shieldActive = true;
+        if (shieldTimer != null) {
+            shieldTimer.cancel();
+        }
+        shieldTimer = new Timer();
+        shieldTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    shieldActive = false;
+                    inventory.resetShield(); // Clear the shield from the inventory
+                });
+            }
+        }, 10000);
+    }
+
+    public void activateDoubleShot() {
+        doubleShotActive = true;
+        if (doubleShotTimer != null) {
+            doubleShotTimer.cancel();
+        }
+        doubleShotTimer = new Timer();
+        doubleShotTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    doubleShotActive = false;
+                    inventory.resetDoubleShot();
+                });
+            }
+        }, 10000);
+    }
+
+    public void activateBomb(double bombX, double bombY) {
+        double bombRadius = 100; // Ajusta el radio de explosión
+        List<Enemy> enemiesToRemove = new ArrayList<>();
+
+        for (Enemy enemy : rootController.getEnemyManager().getEnemies()) {
+            double distance = Math.sqrt(Math.pow(enemy.getX() - bombX, 2) + Math.pow(enemy.getY() - bombY, 2));
+            if (distance <= bombRadius) {
+                enemiesToRemove.add(enemy);
+            }
+        }
+
+        Platform.runLater(() -> {
+            for (Enemy enemy : enemiesToRemove) {
+                rootController.getEnemyManager().removeEnemy(enemy);
+                addScore(enemy.getPoints()); // Add points for each eliminated enemy
+            }
+
+            // Clear the bomb from the inventory and set bombActive to false
+            inventory.resetBomb();
+            bombActive = false;
+
+            System.out.println("💣 Bomb exploded! Enemies eliminated: " + enemiesToRemove.size());
+        });
+    }
+
+
+    public void deactivatePowerUps() {
+        shieldActive = false;
+        doubleShotActive = false;
+        if (shieldTimer != null) {
+            shieldTimer.cancel();
+        }
+        if (doubleShotTimer != null) {
+            doubleShotTimer.cancel();
+        }
+    }
 }

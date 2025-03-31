@@ -18,8 +18,8 @@ public class Lives {
     }
 
     //Metodo para reducir vidas
-    public void reducirVida() {
-        if (vidas > 0) {
+    public void reducirVida(boolean shieldActive) {
+        if (!shieldActive && vidas > 0) {  // Solo reduce si el escudo NO está activo
             vidas--;
         }
     }

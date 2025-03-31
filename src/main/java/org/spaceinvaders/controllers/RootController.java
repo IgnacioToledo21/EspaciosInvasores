@@ -68,6 +68,13 @@ public class RootController implements Initializable {
 
     private List<DefenseWall> defenseWalls; // Lista de muros de defensa
 
+    private List<PowerUps> powerUps = new ArrayList<>(); // Lista de PowerUps
+    private boolean cooldownActive = false;
+    private Timer cooldownTimer = new Timer();
+
+    private Inventory inventory;
+
+
     public RootController() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
@@ -86,21 +93,53 @@ public class RootController implements Initializable {
         return contador;
     }
 
+    public boolean isCooldownActive() {
+        return cooldownActive;
+    }
+
+    public void setCooldownActive(boolean cooldownActive) {
+        this.cooldownActive = cooldownActive;
+    }
+
+    public Timer getCooldownTimer() {
+        return cooldownTimer;
+    }
+
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
+    }
+
+    public void resetCooldown() {
+        setCooldownActive(false);
+        cooldownTimer.cancel();
+        cooldownTimer = new Timer();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         scoreBoardController = new ScoreBoardController();
         scoreBoardController.setRootController(this); // Set the RootController reference
 
+        inventory = new Inventory(gameCanvas.getWidth() - 60, gameCanvas.getHeight() - 60, 50, 50);
 
         background = new Image(getClass().getResourceAsStream("/images/FondoJuegoCasas1200x1400.jpg"));
         gc = gameCanvas.getGraphicsContext2D();
-        ship = new Ship();
+        ship = new Ship(inventory);
+        ship.setRootController(this); // Set the RootController in the Ship instance
+
         vidas = new Lives();
         enemyManager = new EnemyManager(this);
 
         gameCanvas.setFocusTraversable(true);
         gameCanvas.setOnKeyPressed(event -> keysPressed.add(event.getCode()));
+        gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
+        gameCanvas.setOnKeyPressed(event -> {
+            keysPressed.add(event.getCode());
+            if (event.getCode() == KeyCode.B) {
+                ship.fireBomb();
+            }
+        });
         gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
 
         // Asignar RootController a la ventana
@@ -116,6 +155,9 @@ public class RootController implements Initializable {
         defenseWalls.add(new DefenseWall(600, 500, 50, 40, 20));
         defenseWalls.add(new DefenseWall(800, 500, 50, 40, 20));
         defenseWalls.add(new DefenseWall(1000, 500, 50, 40, 20));
+
+        // Inicializar la lista de PowerUps (sin añadir un PowerUp inicial)
+        powerUps = new ArrayList<>();
 
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar mensaje al iniciar
         mostrarBotonReady(); // ✅ Mostrar botón READY al iniciar
@@ -151,8 +193,13 @@ public class RootController implements Initializable {
         if (keysPressed.contains(KeyCode.SPACE)) {
             ship.fireProjectile();
         }
+        if (keysPressed.contains(KeyCode.B)) {
+            ship.fireBomb();
+            draw();
+        }
 
         ship.updateProjectiles();
+        ship.updateBombs(enemyManager.getEnemies());
         enemyManager.moveEnemies();
         enemyManager.updateProjectiles(ship.getProjectiles());
 
@@ -201,7 +248,38 @@ public class RootController implements Initializable {
 
         // Verificación de colisión entre enemigos y la nave
         if (enemyManager.checkCollisionWithShip(ship)) {
-            vidas.reducirVida();
+            vidas.reducirVida(ship.isShieldActive());
+
+        }
+
+        // Verificación de colisión entre la nave y los PowerUps
+        Iterator<PowerUps> powerUpIterator = powerUps.iterator();
+        while (powerUpIterator.hasNext()) {
+            PowerUps powerUp = powerUpIterator.next();
+            powerUp.update();
+            if (powerUp.getBounds().intersects(ship.getBounds().getMinX(), ship.getBounds().getMinY(), ship.getBounds().getWidth(), ship.getBounds().getHeight())) {
+                powerUp.applyEffect(ship);
+                switch (powerUp.getType()) {
+                    case SHIELD:
+                        inventory.collectShield(); // Collect the shield in the inventory
+                        break;
+                    case DOUBLE_SHOT:
+                        inventory.collectDoubleShot(); // Collect the double shot in the inventory
+                        break;
+                    case BOMB:
+                        inventory.collectBomb(); // Collect the bomb in the inventory
+                        break;
+                }
+                powerUpIterator.remove(); // Eliminar el PowerUp después de aplicarlo
+            }
+        }
+
+        // Limpiar el inventario cuando el efecto del poder termine
+        if (!ship.isShieldActive()) {
+            inventory.resetShield();
+        }
+        if (!ship.isDoubleShotActive()) {
+            inventory.resetDoubleShot();
         }
 
         if (vidas.getVidas() <= 0) {
@@ -210,6 +288,39 @@ public class RootController implements Initializable {
         }
 
         draw();
+    }
+
+    // Metodo para generar PowerUps al eliminar enemigos
+    public void generarPowerUp(double x, double y) {
+        if (cooldownActive) {
+            return;
+        }
+
+        double probability = Math.random();
+        if (probability <= 0.1) { // 10% chance
+            PowerUps.PowerUpType type;
+            double typeProbability = Math.random();
+            if (typeProbability < 0.33) {
+                type = PowerUps.PowerUpType.SHIELD;
+            } else if (typeProbability < 0.66) {
+                type = PowerUps.PowerUpType.DOUBLE_SHOT;
+            } else {
+                type = PowerUps.PowerUpType.BOMB;
+            }
+            PowerUps powerUp = new PowerUps(x, y, type);
+            powerUps.add(powerUp);
+            startCooldown();
+        }
+    }
+
+    private void startCooldown() {
+        setCooldownActive(true);
+        cooldownTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> setCooldownActive(false));
+            }
+        }, 15000); // 15 seconds cooldown
     }
 
 
@@ -228,6 +339,14 @@ public class RootController implements Initializable {
                     gc.drawImage(wall.getCurrentImage(), wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
                 }
             }
+
+            // Dibujar los PowerUps
+            for (PowerUps powerUp : powerUps) {
+                powerUp.draw(gc);
+            }
+
+            // Dibujar el inventario
+            inventory.draw(gc);
         }
 
         // Dibujar el texto del contador en el Canvas
@@ -269,7 +388,7 @@ public class RootController implements Initializable {
         keysPressed.clear(); // ✅ Detener movimiento automático
 
         // ✅ Reiniciar todas las entidades
-        ship = new Ship();
+        ship = new Ship(inventory);
         vidas.reiniciar();
         enemyManager = new EnemyManager(this);
 
@@ -293,6 +412,9 @@ public class RootController implements Initializable {
         root.setCenter(gameCanvas);
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight()); // ✅ Limpiar pantalla antes de redibujar
 
+        powerUps.clear();
+        powerUps.add(new PowerUps(300, 0, PowerUps.PowerUpType.SHIELD));
+
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar el mensaje inicial
         mostrarBotonReady(); // ✅ Mostrar el botón READY
     }
@@ -305,6 +427,7 @@ public class RootController implements Initializable {
         defenseWalls.add(new DefenseWall(600, 500, 50, 40, 20));
         defenseWalls.add(new DefenseWall(800, 500, 50, 40, 20));
         defenseWalls.add(new DefenseWall(1000, 500, 50, 40, 20));
+
     }
 
 

@@ -139,6 +139,13 @@ public class EnemyManager {
         enemyProjectiles.clear();
         rootController.getShip().getProjectiles().clear();
 
+        // Resetear el cooldown y desactivar poderes de la nave
+        rootController.resetCooldown();
+        rootController.getShip().deactivatePowerUps();
+
+        // Resetear el inventario de la nave
+        rootController.getShip().getInventory().reset();
+
         createEnemies(); //Generar nuevos enemigos
         scheduleEnemyShots(); //Comenzar disparos enemigos
     }
@@ -151,6 +158,13 @@ public class EnemyManager {
             // Limpiar las listas de proyectiles
             enemyProjectiles.clear();
             rootController.getShip().getProjectiles().clear();
+
+            // Resetear el cooldown y desactivar poderes de la nave
+            rootController.resetCooldown();
+            rootController.getShip().deactivatePowerUps();
+
+            // Resetear el inventario de la nave
+            rootController.getShip().getInventory().reset();
         }
     }
 
@@ -191,20 +205,25 @@ public class EnemyManager {
         }
     }
 
-    //Comprobar colisiones con la nave del jugador
     public boolean checkCollisionWithShip(Ship ship) {
-        boolean impactado = false; // Variable para saber si hubo colisión
+        boolean impactado = false;
 
         Iterator<EnemyProjectile> iterator = enemyProjectiles.iterator();
         while (iterator.hasNext()) {
             EnemyProjectile projectile = iterator.next();
             if (projectile.collidesWith(ship)) {
-                iterator.remove(); // Eliminar el proyectil al impactar
-                ship.reducirVida(); // Reducir una vida en la nave (opcional)
-                impactado = true; // Se detectó una colisión
+                iterator.remove(); // Remove the projectile upon impact
+                if (!ship.isShieldActive()) {
+                    System.out.println("El escudo está desactivado, reduciendo vida...");
+
+                    ship.reducirVida(); // Reduce a life on the ship only if the shield is not active
+                } else {
+                    System.out.println("Impact blocked by the shield.");
+                }
+                impactado = true; // A collision was detected
             }
         }
-        return impactado; // ✅ Devuelve `true` si hubo colisión
+        return impactado; // Return `true` if there was a collision
     }
 
     //Comprobar colisiones de proyectiles
@@ -225,6 +244,10 @@ public class EnemyManager {
                         rootController.getShip().addScore(puntos); // ✅ Sumar puntos a la nave
                         System.out.println("🔥 Enemigo derrotado: +" + puntos + " puntos");
                         System.out.println("🏆 Puntuación acumulada: " + rootController.getShip().getScore()); // Add points to the player's score
+
+                        // Generate power-up with 10% probability
+                        rootController.generarPowerUp(enemy.getX(), enemy.getY());
+
 
                     }
                     break; // Un solo proyectil impacta a un enemigo
