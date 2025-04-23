@@ -413,7 +413,7 @@ public class RootController implements Initializable {
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight()); // ✅ Limpiar pantalla antes de redibujar
 
         powerUps.clear();
-        powerUps.add(new PowerUps(300, 0, PowerUps.PowerUpType.SHIELD));
+        inventory.reset(); // ✅ Reiniciar el inventario
 
         mostrarMensajeOleada("Primera Oleada"); // ✅ Mostrar el mensaje inicial
         mostrarBotonReady(); // ✅ Mostrar el botón READY

@@ -25,7 +25,7 @@ public class Ship {
     private int vidas = 3;
 
     private long lastShotTime = 0;
-    private final long SHOOT_COOLDOWN = 0000; // 0.8 segundos de cooldown
+    private final long SHOOT_COOLDOWN = 0500; // 0.5 segundos de cooldown
 
     private boolean shieldActive = false;
     private Timer shieldTimer;

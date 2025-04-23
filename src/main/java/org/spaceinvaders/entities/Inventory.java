@@ -9,6 +9,7 @@ public class Inventory {
     private double width, height;
     private Image bombImage, doubleShotImage, shieldImage;
     private boolean bombCollected, doubleShotCollected, shieldCollected;
+    private Image InventoryImage;
 
     private Ship ship;
 
@@ -23,6 +24,7 @@ public class Inventory {
         this.bombCollected = false;
         this.doubleShotCollected = false;
         this.shieldCollected = false;
+        this.InventoryImage = new Image(getClass().getResourceAsStream("/images/Inventario.png"));
     }
 
     public void reset() {
@@ -73,8 +75,10 @@ public class Inventory {
 
         gc.clearRect(x, y, width, height);
 
-        gc.setStroke(Color.BLUE);
-        gc.strokeRect(x, y, width, height);
+//        gc.setStroke(Color.BLUE);
+//        gc.strokeRect(x, y, width, height);
+
+        gc.drawImage(InventoryImage, x, y, width, height);
 
         if (bombCollected) {
             gc.drawImage(bombImage, x, y, width, height);
