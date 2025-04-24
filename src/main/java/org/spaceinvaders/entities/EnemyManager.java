@@ -3,6 +3,7 @@ package org.spaceinvaders.entities;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import org.spaceinvaders.controllers.RootController;
+import org.spaceinvaders.utils.SoundManager;
 
 import java.util.*;
 
@@ -320,6 +321,8 @@ public class EnemyManager {
 
                         // Generate power-up with 10% probability
                         rootController.generarPowerUp(enemy.getX(), enemy.getY());
+
+                        SoundManager.play(SoundManager.Sound.ENEMY_DESTROYED); // ✅ Reproducir sonido de enemigo destruido
 
 
                     }

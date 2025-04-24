@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.spaceinvaders.controllers.RootController;
+import org.spaceinvaders.utils.SoundManager;
 
 import java.util.*;
 
@@ -101,13 +102,13 @@ public class Ship {
             projectiles.add(new Projectile(x1, y0));
             projectiles.add(new Projectile(x2, y0));
 
-            System.out.println("[DEBUG] Added TWO projectiles at x1=" + x1 + ", x2=" + x2);
         } else {
             double x0 = x + (shipW / 2) - (projW / 2);
             projectiles.add(new Projectile(x0, y0));
             System.out.println("[DEBUG] Added ONE projectile at x0=" + x0);
         }
 
+        SoundManager.play(SoundManager.Sound.SHOT);
         lastShotTime = now;
     }
 
@@ -121,6 +122,7 @@ public class Ship {
 
             inventory.useBomb(); // Asegura que la bomba se elimine del inventario
             bomb.setImage(bombSprite);
+            SoundManager.play(SoundManager.Sound.BOMB);
             System.out.println("🔥 Bomba lanzada y eliminada del inventario.");
         } else {
             System.out.println("🚫 No hay bomba en el inventario.");
@@ -161,6 +163,7 @@ public class Ship {
         if (!shieldActive) {
             vidas--;
             System.out.println("La nave ha sido impactada. Vidas restantes: " + vidas);
+            SoundManager.play(SoundManager.Sound.DAMAGE);
         } else {
             System.out.println("Impacto bloqueado por el escudo.");
         }
