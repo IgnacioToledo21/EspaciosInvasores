@@ -13,8 +13,8 @@ public class Lives {
     //Constructor de las vidas
     public Lives() {
         this.vidas = MAX_VIDAS; // Comenzamos con 3 vidas
-        heartFull = new Image(getClass().getResourceAsStream("/images/Vidas-1.png.png"));
-        heartEmpty = new Image(getClass().getResourceAsStream("/images/Vidasrotaspng.png"));
+        heartFull = new Image(getClass().getResourceAsStream("/images/vidas/Vidas-1.png.png"));
+        heartEmpty = new Image(getClass().getResourceAsStream("/images/vidas/Vidasrotaspng.png"));
     }
 
     //Metodo para reducir vidas

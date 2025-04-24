@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 //PDF
-import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -355,7 +354,7 @@ public class ScoreBoardController implements Initializable {
             document.open();
 
             // Cargar la imagen de fondo
-            Image background = Image.getInstance(getClass().getResource("/images/FondoDiploma.jpg"));
+            Image background = Image.getInstance(getClass().getResource("/images/fondos/FondoDiploma.jpg"));
             background.setAbsolutePosition(0, 0);
             background.scaleToFit(document.getPageSize().getWidth(), document.getPageSize().getHeight());
             document.add(background);
@@ -441,42 +440,42 @@ public class ScoreBoardController implements Initializable {
             document.add(border);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image = Image.getInstance(getClass().getResource("/images/NavePrincipal.png"));
+            Image image = Image.getInstance(getClass().getResource("/images/naves/NavePrincipal.png"));
             image.setAlignment(Image.ALIGN_CENTER);
             image.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
             image.setAbsolutePosition(50, 600);
             document.add(image);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image2 = Image.getInstance(getClass().getResource("/images/Enemigo Tanque-1.png.png"));
+            Image image2 = Image.getInstance(getClass().getResource("/images/enemigos/Enemigo Tanque-1.png.png"));
             image2.setAlignment(Image.ALIGN_CENTER);
             image2.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
             image2.setAbsolutePosition(50, 200);
             document.add(image2);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image3 = Image.getInstance(getClass().getResource("/images/Enemigocaballero1png.png"));
+            Image image3 = Image.getInstance(getClass().getResource("/images/enemigos/Enemigocaballero1png.png"));
             image3.setAlignment(Image.ALIGN_CENTER);
             image3.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
             image3.setAbsolutePosition(500, 600);
             document.add(image3);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image4 = Image.getInstance(getClass().getResource("/images/Primer Boss-1.png.png"));
+            Image image4 = Image.getInstance(getClass().getResource("/images/bosses/Primer Boss-1.png.png"));
             image4.setAlignment(Image.ALIGN_CENTER);
             image4.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
             image4.setAbsolutePosition(450, 300);
             document.add(image4);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image5 = Image.getInstance(getClass().getResource("/images/Bala aliada-1.png.png"));
+            Image image5 = Image.getInstance(getClass().getResource("/images/projectiles/Bala aliada-1.png.png"));
             image5.setAlignment(Image.ALIGN_CENTER);
             image5.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
             image5.setAbsolutePosition(450, 250);
             document.add(image5);
 
             // Cargar y agregar la imagen de la nave principal
-            Image image6 = Image.getInstance(getClass().getResource("/images/Bala aliada-1.png.png"));
+            Image image6 = Image.getInstance(getClass().getResource("/images/projectiles/Bala aliada-1.png.png"));
             image6.setAlignment(Image.ALIGN_CENTER);
             image6.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
             image6.setAbsolutePosition(470, 270);

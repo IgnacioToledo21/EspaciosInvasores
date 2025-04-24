@@ -2,7 +2,6 @@ package org.spaceinvaders.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ public class Boss {
     public Boss(double x, double y) {
         this.x = x;
         this.y = y;
-        frame1 = new Image(getClass().getResourceAsStream("/images/Primer Boss-1.png.png"));
-        frame2 = new Image(getClass().getResourceAsStream("/images/Primer Boss-2.png.png"));
+        frame1 = new Image(getClass().getResourceAsStream("/images/bosses/Primer Boss-1.png.png"));
+        frame2 = new Image(getClass().getResourceAsStream("/images/bosses/Primer Boss-2.png.png"));
     }
     //Movimientos del jefe
     public void move() {

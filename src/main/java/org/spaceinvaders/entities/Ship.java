@@ -5,7 +5,6 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.spaceinvaders.controllers.RootController;
 
 import java.util.*;
@@ -25,7 +24,7 @@ public class Ship {
     private int vidas = 3;
 
     private long lastShotTime = 0;
-    private final long SHOOT_COOLDOWN = 0500; // 0.5 segundos de cooldown
+    private final long SHOOT_COOLDOWN = 0000; // 0.5 segundos de cooldown
 
     private boolean shieldActive = false;
     private Timer shieldTimer;
@@ -54,9 +53,9 @@ public class Ship {
         this.x = 600;
         this.y = 600;
 
-        shipSprite = new Image(getClass().getResourceAsStream("/images/Nave Principal40x50.png.png"));
-        projectileSprite = new Image(getClass().getResourceAsStream("/images/Bala aliada-1.png.png"));
-        bombSprite = new Image(getClass().getResourceAsStream("/images/poderes/BOMBBASE.png"));
+        shipSprite = new Image(getClass().getResourceAsStream("/images/naves/Nave Principal40x50.png.png"));
+        projectileSprite = new Image(getClass().getResourceAsStream("/images/projectiles/Bala aliada-1.png.png"));
+        bombSprite = new Image(getClass().getResourceAsStream("/images/poderes/BOMB.png"));
         shieldSprite = new Image(getClass().getResourceAsStream("/images/poderes/SHIELD.png"));
 
         this.inventory = inventory;
@@ -85,22 +84,33 @@ public class Ship {
     }
 
     public void fireProjectile() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShotTime >= SHOOT_COOLDOWN) {
-            if (doubleShotActive) {
-                double projectileX1 = x;
-                double projectileX2 = x + shipSprite.getWidth() - projectileSprite.getWidth();
-                double projectileY = y - projectileSprite.getHeight();
-                projectiles.add(new Projectile(projectileX1, projectileY));
-                projectiles.add(new Projectile(projectileX2, projectileY));
-            } else {
-                double projectileX = x + (shipSprite.getWidth() / 2) - (projectileSprite.getWidth() / 2);
-                double projectileY = y - projectileSprite.getHeight();
-                projectiles.add(new Projectile(projectileX, projectileY));
-            }
-            lastShotTime = currentTime;
+        long now = System.currentTimeMillis();
+        if (now - lastShotTime < SHOOT_COOLDOWN) return;
+
+        double shipW       = 50;                        // ancho en pantalla
+        double projW       = projectileSprite.getWidth(); // ancho real de la bala
+        double separation  = 10;                        // separación deseada desde los bordes
+        double y0          = y - projectileSprite.getHeight();
+
+        if (doubleShotActive) {
+            // Primera bala: un poquito a la derecha del borde izquierdo
+            double x1 = x + separation;
+            // Segunda bala: un poquito a la izquierda del borde derecho
+            double x2 = x + shipW - projW - separation;
+
+            projectiles.add(new Projectile(x1, y0));
+            projectiles.add(new Projectile(x2, y0));
+
+            System.out.println("[DEBUG] Added TWO projectiles at x1=" + x1 + ", x2=" + x2);
+        } else {
+            double x0 = x + (shipW / 2) - (projW / 2);
+            projectiles.add(new Projectile(x0, y0));
+            System.out.println("[DEBUG] Added ONE projectile at x0=" + x0);
         }
+
+        lastShotTime = now;
     }
+
 
     public void fireBomb() {
         if (inventory.hasBomb()) { // Verifica si hay una bomba en el inventario
@@ -110,6 +120,7 @@ public class Ship {
             bombs.add(bomb);
 
             inventory.useBomb(); // Asegura que la bomba se elimine del inventario
+            bomb.setImage(bombSprite);
             System.out.println("🔥 Bomba lanzada y eliminada del inventario.");
         } else {
             System.out.println("🚫 No hay bomba en el inventario.");
@@ -160,20 +171,21 @@ public class Ship {
     }
 
     public void draw(GraphicsContext gc) {
+        gc.drawImage(shipSprite, x, y, 50, 40);
+
         if (shieldActive) {
-            gc.drawImage(shieldSprite, x, y, 50, 40);
-        } else {
-            gc.drawImage(shipSprite, x, y, 50, 40);
+            gc.drawImage(shieldSprite, x , y - 5,
+                    shipSprite.getWidth() + 10, shipSprite.getHeight() + 10);
         }
 
         for (Projectile p : projectiles) {
             p.draw(gc);
         }
-
         for (PowerUps b : bombs) {
             b.draw(gc);
         }
     }
+
 
     public List<Projectile> getProjectiles() {
         return projectiles;

@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,7 +14,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,6 +36,9 @@ public class RootController implements Initializable {
 
     @FXML
     private Canvas gameCanvas;
+
+    // Nuevo campo para la ruta de skin seleccionada
+    private String selectedSkinPath;
 
     private Ship ship;
     private Lives vidas;
@@ -74,6 +75,9 @@ public class RootController implements Initializable {
 
     private Inventory inventory;
 
+    public void setSelectedSkinPath(String path) {
+        this.selectedSkinPath = path;
+    }
 
     public RootController() {
         try {
@@ -123,21 +127,33 @@ public class RootController implements Initializable {
 
         inventory = new Inventory(gameCanvas.getWidth() - 60, gameCanvas.getHeight() - 60, 50, 50);
 
-        background = new Image(getClass().getResourceAsStream("/images/FondoJuegoCasas1200x1400.jpg"));
+        background = new Image(getClass().getResourceAsStream("/images/fondos/FondoJuegoCasas1200x1400.jpg"));
         gc = gameCanvas.getGraphicsContext2D();
-        ship = new Ship(inventory);
-        ship.setRootController(this); // Set the RootController in the Ship instance
+
+        // Inicializa la nave con la skin seleccionada si existe
+        if (selectedSkinPath != null) {
+            Image skinImg = new Image(
+                    getClass().getResourceAsStream(selectedSkinPath)
+            );
+            ship = new Ship(inventory);
+            ship.setShipSprite(skinImg);
+        } else {
+            ship = new Ship(inventory);  // carga sprite por defecto en constructor
+        }
+
+        ship.setRootController(this);
 
         vidas = new Lives();
         enemyManager = new EnemyManager(this);
 
         gameCanvas.setFocusTraversable(true);
-        gameCanvas.setOnKeyPressed(event -> keysPressed.add(event.getCode()));
-        gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));
         gameCanvas.setOnKeyPressed(event -> {
             keysPressed.add(event.getCode());
             if (event.getCode() == KeyCode.B) {
                 ship.fireBomb();
+            }
+            if (event.getCode() == KeyCode.SPACE) {
+                ship.fireProjectile();
             }
         });
         gameCanvas.setOnKeyReleased(event -> keysPressed.remove(event.getCode()));

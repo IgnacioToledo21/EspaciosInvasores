@@ -32,9 +32,13 @@ public class PowerUps {
                 this.image = new Image(getClass().getResourceAsStream("/images/poderes/DOUBLESHOT.png"));
                 break;
             case BOMB:
-                this.image = new Image(getClass().getResourceAsStream("/images/poderes/BOMB.png"));
+                this.image = new Image(getClass().getResourceAsStream("/images/poderes/BOMBBASE.png"));
                 break;
         }
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public void draw(GraphicsContext gc) {
@@ -67,14 +71,14 @@ public class PowerUps {
         switch (type) {
             case SHIELD:
                 ship.activateShield();
-                ship.getInventory().collectShield(); // Collect shield in inventory
+                ship.getInventory().collectShield();
                 break;
             case DOUBLE_SHOT:
                 ship.activateDoubleShot();
-                ship.getInventory().collectDoubleShot(); // Collect double shot in inventory
+                ship.getInventory().collectDoubleShot();
                 break;
             case BOMB:
-                ship.getInventory().collectBomb(); // Solo almacena la bomba en el inventario
+                ship.getInventory().collectBomb();
                 break;
         }
         deactivate();

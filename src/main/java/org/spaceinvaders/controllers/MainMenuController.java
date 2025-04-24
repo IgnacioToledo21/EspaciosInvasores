@@ -75,7 +75,7 @@ public class MainMenuController implements Initializable {
         ScoreBoardController scoreBoardController = new ScoreBoardController();
 
         // Load the background image
-        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/FondoJuegoMenu1200x1400.jpg"));
+        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/fondos/FondoJuegoMenu1200x1400.jpg"));
         backgroundImageView1 = new ImageView(backgroundImage);
         backgroundImageView2 = new ImageView(backgroundImage);
 

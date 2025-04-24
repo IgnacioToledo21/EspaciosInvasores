@@ -7,12 +7,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ShipSelectorController implements Initializable {
@@ -38,6 +40,13 @@ public class ShipSelectorController implements Initializable {
     private Stage dialogStage;
     private Stage primaryStage;
 
+    private final List<String> skinPaths = List.of(
+            "/images/naves/NavePrincipal.png",
+            "/images/naves/NavePrincipal2.png"
+
+    );
+    private int currentIndex = 0;
+
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
@@ -48,22 +57,32 @@ public class ShipSelectorController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        updatePreview();
 
+    }
+
+    private void updatePreview() {
+        String path = skinPaths.get(currentIndex);
+        shipImageView.setImage(new Image(
+                getClass().getResourceAsStream(path)
+        ));
     }
 
     @FXML
     void onLeftButtonAction(ActionEvent event) {
-
+        currentIndex = (currentIndex - 1 + skinPaths.size()) % skinPaths.size();
+        updatePreview();
     }
 
     @FXML
     void onRightButtonAction(ActionEvent event) {
-
+        currentIndex = (currentIndex + 1) % skinPaths.size();
+        updatePreview();
     }
 
     @FXML
     void onCancelButtonAction(ActionEvent event) {
-
+        dialogStage.close();
     }
 
     @FXML
@@ -73,6 +92,8 @@ public class ShipSelectorController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
             RootController rootController = new RootController();
             loader.setController(rootController);
+            rootController.setSelectedSkinPath(skinPaths.get(currentIndex));
+
             Parent root = loader.load();
 
             // 2) Nueva Scene para el Stage principal

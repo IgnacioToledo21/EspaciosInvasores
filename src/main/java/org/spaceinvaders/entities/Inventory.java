@@ -2,7 +2,6 @@ package org.spaceinvaders.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class Inventory {
     private double x, y;
@@ -18,13 +17,13 @@ public class Inventory {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.bombImage = new Image(getClass().getResourceAsStream("/images/poderes/BOMB.png"));
+        this.bombImage = new Image(getClass().getResourceAsStream("/images/poderes/BOMBBASE.png"));
         this.doubleShotImage = new Image(getClass().getResourceAsStream("/images/poderes/DOUBLESHOT.png"));
         this.shieldImage = new Image(getClass().getResourceAsStream("/images/poderes/SHIELDBASE.png"));
         this.bombCollected = false;
         this.doubleShotCollected = false;
         this.shieldCollected = false;
-        this.InventoryImage = new Image(getClass().getResourceAsStream("/images/Inventario.png"));
+        this.InventoryImage = new Image(getClass().getResourceAsStream("/images/inventario/Inventario.png"));
     }
 
     public void reset() {

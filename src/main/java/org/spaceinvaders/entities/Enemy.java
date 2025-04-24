@@ -3,10 +3,8 @@ package org.spaceinvaders.entities;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import java.util.List;
-import java.util.Random;
 
 public class Enemy {
 
@@ -36,20 +34,20 @@ public class Enemy {
             case 1:
                 this.vida = 1;
                 this.puntosBase = 5;
-                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-1.png.png"));
-                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo soldado-2.png.png"));
+                frame1 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigo soldado-1.png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigo soldado-2.png.png"));
                 break;
             case 2:
                 this.vida = 2;
                 this.puntosBase = 10;
-                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero1png.png"));
-                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigocaballero2png.png"));
+                frame1 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigocaballero1png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigocaballero2png.png"));
                 break;
             case 3:
                 this.vida = 3;
                 this.puntosBase = 50;
-                frame1 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-1.png.png"));
-                frame2 = new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-2.png.png"));
+                frame1 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigo Tanque-1.png.png"));
+                frame2 = new Image(getClass().getResourceAsStream("/images/enemigos/Enemigo Tanque-2.png.png"));
                 break;
         }
     }

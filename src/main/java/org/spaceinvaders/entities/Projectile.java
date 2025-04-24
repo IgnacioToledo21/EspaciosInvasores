@@ -3,7 +3,6 @@ package org.spaceinvaders.entities;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class Projectile {
     private double x, y;
@@ -17,7 +16,7 @@ public class Projectile {
         this.y = y;
 
         // Cargar el sprite del proyectil del jugador
-        projectileSprite = new Image(getClass().getResourceAsStream("/images/Bala aliada-1.png.png"));
+        projectileSprite = new Image(getClass().getResourceAsStream("/images/projectiles/Bala aliada-1.png.png"));
     }
     // Movimiento del proyectil
     public void update() {

@@ -26,7 +26,7 @@ public class App extends Application {
 
         primaryStage.setTitle("Espacios Invasores");
         // Agregar el icono a la ventana
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/Enemigo Tanque-2.png.png")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/enemigos/Enemigo Tanque-2.png.png")));
 
         // Contenedor principal
         StackPane root = new StackPane();

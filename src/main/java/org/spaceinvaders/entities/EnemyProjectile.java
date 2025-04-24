@@ -18,7 +18,7 @@ public class EnemyProjectile {
         this.y = y;
 
         // Cargar el sprite del proyectil enemigo
-        enemyProjectileSprite = new Image(getClass().getResourceAsStream("/images/Bala enemigaverde.png"));
+        enemyProjectileSprite = new Image(getClass().getResourceAsStream("/images/projectiles/Bala enemigaverde.png"));
     }
 
     // Movimiento del proyectil enemigo
