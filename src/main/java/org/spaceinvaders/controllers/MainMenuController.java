@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.spaceinvaders.entities.ScoreEntry;
@@ -292,21 +293,42 @@ public class MainMenuController implements Initializable {
     @FXML
     void onPlayButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
-            RootController rootController = new RootController();
-            loader.setController(rootController);
+            // 1) Preparar el loader con su controlador
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ShipSelectorView.fxml"));
+            ShipSelectorController selectorController = new ShipSelectorController();
+            loader.setController(selectorController);
 
-            Stage stage = (Stage) root.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 700);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            // 2) Cargar la vista de selección
+            BorderPane selectorRoot = loader.load();
+            Scene selectorScene = new Scene(selectorRoot, 600, 400);
+            selectorScene.getStylesheets().add(
+                    getClass().getResource("/css/styles.css").toExternalForm()
+            );
 
-            stage.setScene(scene);
-            rootController.mostrarMensajeOleada("Primera Oleada");
-            rootController.mostrarBotonReady();
+            // 3) Crear y configurar el diálogo
+            Stage selectorStage = new Stage();
+            selectorStage.setTitle("Selecciona tu nave");
+            selectorStage.setScene(selectorScene);
+            selectorStage.initModality(Modality.APPLICATION_MODAL);
+
+            // 4) Obtener el Stage principal desde el BorderPane inyectado
+            Stage primaryStage = (Stage) root.getScene().getWindow();
+            selectorStage.initOwner(primaryStage);
+
+            // 5) Pasar ambos Stages al controlador de selección
+            selectorController.setDialogStage(selectorStage);
+            selectorController.setPrimaryStage(primaryStage);
+
+            // 6) Mostrar diálogo
+            selectorStage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
 
     @FXML
     void onScoreButtonAction(ActionEvent event) {
@@ -338,3 +360,22 @@ public class MainMenuController implements Initializable {
     }
 
 }
+
+//@FXML
+//void onPlayButtonAction(ActionEvent event) {
+//    try {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
+//        RootController rootController = new RootController();
+//        loader.setController(rootController);
+//
+//        Stage stage = (Stage) root.getScene().getWindow();
+//        Scene scene = new Scene(loader.load(), 1200, 700);
+//        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+//
+//        stage.setScene(scene);
+//        rootController.mostrarMensajeOleada("Primera Oleada");
+//        rootController.mostrarBotonReady();
+//    } catch (IOException e) {
+//        e.printStackTrace();
+//    }
+//}

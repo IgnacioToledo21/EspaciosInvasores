@@ -63,6 +63,10 @@ public class Ship {
 
     }
 
+    public void setShipSprite(Image newSprite) {
+        this.shipSprite = newSprite;
+    }
+
 
     public Inventory getInventory() {
         return inventory;
