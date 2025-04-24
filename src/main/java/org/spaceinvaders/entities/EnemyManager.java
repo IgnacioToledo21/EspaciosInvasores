@@ -23,7 +23,6 @@ public class EnemyManager {
     private Random rnd = new Random();
     private List<AlienShip> specialAlien = new ArrayList<>();
 
-
     //Sistema de oleadas
     private int oleada = 1;  // Inicia en la primera oleada
     private double velocidadEnemigos = 1;  // Velocidad base de los enemigos
@@ -205,7 +204,7 @@ public class EnemyManager {
         // 👽 Generar nave alienígena si ha pasado el tiempo
         double elapsedWave = (System.currentTimeMillis() - waveStartTime) / 1000.0;
         if (!alienSpawned
-                && elapsedWave >= 5 // Esperar 30 segundos para generar la nave alienígena
+                && elapsedWave >= 30 // Esperar 30 segundos para generar la nave alienígena
                 && oleada <= 3
                 && boss == null
                 && rnd.nextDouble() < 0.5) { // Probabilidad del 50%
@@ -229,36 +228,55 @@ public class EnemyManager {
         }
     }
 
-    // Dibujar enemigos
+    // Dibujar enemigos y proyectiles, incluyendo naves alienígenas especiales
     public void draw(GraphicsContext gc) {
+        // 1) Dibujar enemigos normales
         for (Enemy enemy : enemies) {
             enemy.draw(gc);
         }
         drawProjectiles(gc);
 
+        // 2) Dibujar jefe si existe
         if (boss != null) {
             boss.draw(gc);
         }
 
-        // Dibuja y actualiza las naves alienígenas especiales
-        for (AlienShip alien : specialAlien) {
+        // 3) Dibujar y actualizar naves alienígenas especiales
+        Iterator<AlienShip> alienIt = specialAlien.iterator();
+        while (alienIt.hasNext()) {
+            AlienShip alien = alienIt.next();
             alien.update();
             alien.draw(gc);
 
-            // Colisión con proyectiles del jugador
-            Iterator<Projectile> it = rootController.getShip().getProjectiles().iterator();
-            while (it.hasNext()) {
-                Projectile p = it.next();
+            // 4) Comprobar colisión con los proyectiles del jugador
+            Iterator<Projectile> projIt = rootController.getShip().getProjectiles().iterator();
+            while (projIt.hasNext()) {
+                Projectile p = projIt.next();
                 if (p.getBounds().intersects(alien.getBounds())) {
-                    it.remove();
-                    rootController.getShip().addScore(alien.getPoints());
-                    specialAlien.remove(alien); // Eliminar la nave alienígena de la lista
+                    // a) Eliminar el proyectil de forma segura
+                    projIt.remove();
+
+                    // b) Obtener y verificar los puntos
+                    int puntos = alien.getPoints();
+                    if (puntos != 100) {
+                        System.err.println("⚠️ ERROR: AlienShip devolvió " + puntos + " puntos (esperaba 100)");
+                    } else {
+                        System.out.println("🔥 AlienShip destruida: +" + puntos + " puntos");
+                    }
+
+                    // c) Sumar la puntuación a la nave del jugador
+                    rootController.getShip().addScore(puntos);
+                    System.out.println("🏆 Puntuación acumulada: " + rootController.getShip().getScore());
+
+                    // d) Eliminar la nave alienígena de forma segura
+                    alienIt.remove();
+
+                    // e) Salir del bucle de proyectiles para esta nave
                     break;
                 }
             }
         }
     }
-
 
     public boolean checkCollisionWithShip(Ship ship) {
         boolean impactado = false;

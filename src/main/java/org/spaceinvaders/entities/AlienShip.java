@@ -26,6 +26,7 @@ public class AlienShip {
     private static final double WIDTH = 60;    // Ancho del sprite de la nave
 
     public AlienShip() {
+        this.puntosBase = 100; // Puntos base para la nave alienígena
         this.x = rnd.nextDouble() * (MAX_X - WIDTH);  // Posición aleatoria horizontal dentro del margen
         this.y = 10;  // Posición inicial en el eje Y
         this.dirX = rnd.nextBoolean() ? 1 : -1;  // Aleatorio, izquierda o derecha
