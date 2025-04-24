@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="root" prefHeight="200" prefWidth="400" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23">
+<BorderPane fx:id="root" prefHeight="200" prefWidth="400" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
 
     <top>
-        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Elige tu nave" BorderPane.alignment="center" />
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+         <children>
+              <Label styleClass="rainbow-label" text="Elige tu nave" />
+         </children>
+      </HBox>
     </top>
 
     <center>
-        <HBox alignment="center" spacing="20">
-            <Button fx:id="leftButton" onAction="#onLeftButtonAction" text="&lt;" />
+        <HBox alignment="center" spacing="20.0" BorderPane.alignment="CENTER">
+            <Button fx:id="leftButton" onAction="#onLeftButtonAction" styleClass="arrow-button" text="&lt;" />
             <ImageView fx:id="shipImageView" fitHeight="120" fitWidth="100" preserveRatio="true" />
-            <Button fx:id="rightButton" onAction="#onRightButtonAction" text="&gt;" />
+            <Button fx:id="rightButton" onAction="#onRightButtonAction" styleClass="arrow-button" text="&gt;" />
         </HBox>
     </center>
 
     <bottom>
         <HBox alignment="center" spacing="10" style="-fx-padding: 10px;">
-            <Button fx:id="cancelButton" onAction="#onCancelButtonAction" text="Cancelar" />
-            <Button fx:id="confirmButton" onAction="#onConfirmButtonAction" text="Confirmar" />
+            <Button fx:id="cancelButton" onAction="#onCancelButtonAction" styleClass="action-button" text="Cancelar" />
+            <Button fx:id="confirmButton" onAction="#onConfirmButtonAction" styleClass="action-button" text="Confirmar" />
         </HBox>
     </bottom>
 </BorderPane>

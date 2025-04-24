@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class AlienShip {
     private double x, y;
-    private double speed;       
+    private double speed;
     private int dirX;
     private Image sprite;
     private int puntosBase = 100;

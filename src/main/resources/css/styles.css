@@ -137,5 +137,36 @@
 }
 }
 
+/* Aplicar la fuente Press Start 2P al título y botones */
+@font-face {
+    font-family: 'Press Start 2P Regular';
+    src: url('/fonts/PressStart2P-Regular.ttf');
+}
+
+.rainbow-label {
+    -fx-font-family: 'Press Start 2P Regular';
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+/* Estilo para los botones con la fuente */
+.arrow-button, .action-button {
+    -fx-font-family: 'Press Start 2P Regular';
+    -fx-font-size: 16px;
+    -fx-background-color: #000000; /* Fondo negro */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-padding: 10px;
+    -fx-border-color: white; /* Borde blanco */
+    -fx-border-width: 2px;
+    -fx-transition: all 0.5s ease;
+}
+
+/* Efecto hover en los botones */
+.arrow-button:hover, .action-button:hover {
+    -fx-background-color: #808080; /* Fondo gris */
+    -fx-text-fill: black; /* Cambiar el color del texto al pasar el ratón */
+}
+
+
 
 
