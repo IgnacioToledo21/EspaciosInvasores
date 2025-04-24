@@ -8,10 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -23,7 +20,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.spaceinvaders.entities.*;
-import javafx.scene.control.Label;
+import org.spaceinvaders.utils.MusicManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -452,10 +449,15 @@ public class RootController implements Initializable {
         contador.stop();
 
         Platform.runLater(() -> {
+            MusicManager.play(MusicManager.Track.WIN); // ✅ Reproducir música de victoria
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("¡Enhorabuena!");
             alert.setHeaderText("🎉 Has derrotado al Boss 🎉");
             alert.setContentText("¿Quieres revisar la puntuación o salir del juego?");
+
+            // Obtener el DialogPane del Alert y aplicar el estilo
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.setStyle("-fx-font-family: 'Press Start 2P Regular'; -fx-font-size: 10px;");
 
             ButtonType reviewButton = new ButtonType("Revisar Puntuaciones");
             ButtonType exitButton = new ButtonType("Salir del juego");
@@ -544,6 +546,7 @@ public class RootController implements Initializable {
         btnReady.setStyle("-fx-font-size: 20px; -fx-background-color: #00FF00; -fx-text-fill: black; -fx-padding: 10px; -fx-font-family: 'Press Start 2P Regular';");
 
         btnReady.setOnAction(e -> {
+            MusicManager.play(MusicManager.Track.GAME); // ✅ Reproducir música de fondo
             esperandoReady = false; // ✅ Permitir que la oleada comience
             root.setBottom(null); // ✅ Eliminar el botón
             root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se muestre correctamente
@@ -588,6 +591,7 @@ public class RootController implements Initializable {
             btnFaseFinal.setStyle("-fx-font-size: 20px; -fx-background-color: #FF0000; -fx-text-fill: black; -fx-padding: 10px;");
 
             btnFaseFinal.setOnAction(e -> {
+                MusicManager.play(MusicManager.Track.BOSS); // ✅ Reproducir música de fondo
                 root.setBottom(null); // ✅ Eliminar el botón
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 

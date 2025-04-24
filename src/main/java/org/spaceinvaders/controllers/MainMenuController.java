@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.spaceinvaders.entities.ScoreEntry;
 import org.spaceinvaders.entities.ScoreManager;
+import org.spaceinvaders.utils.MusicManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -72,6 +73,7 @@ public class MainMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        MusicManager.play(MusicManager.Track.MENU);
         ScoreBoardController scoreBoardController = new ScoreBoardController();
 
         // Load the background image
@@ -360,22 +362,3 @@ public class MainMenuController implements Initializable {
     }
 
 }
-
-//@FXML
-//void onPlayButtonAction(ActionEvent event) {
-//    try {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
-//        RootController rootController = new RootController();
-//        loader.setController(rootController);
-//
-//        Stage stage = (Stage) root.getScene().getWindow();
-//        Scene scene = new Scene(loader.load(), 1200, 700);
-//        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-//
-//        stage.setScene(scene);
-//        rootController.mostrarMensajeOleada("Primera Oleada");
-//        rootController.mostrarBotonReady();
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
-//}

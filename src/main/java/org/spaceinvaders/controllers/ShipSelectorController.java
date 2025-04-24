@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.spaceinvaders.utils.MusicManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -88,6 +89,8 @@ public class ShipSelectorController implements Initializable {
     @FXML
     void onConfirmButtonAction(ActionEvent event) {
         try {
+            MusicManager.stop();
+
             // 1) Carga de la vista principal (RootView.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootView.fxml"));
             RootController rootController = new RootController();
