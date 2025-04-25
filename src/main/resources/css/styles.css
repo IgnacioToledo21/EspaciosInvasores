@@ -201,6 +201,42 @@
   -fx-text-fill: black;
 }
 
+/* Game Over pane */
+.gameover-pane {
+  -fx-background-color: black;
+  -fx-padding: 40;
+}
+
+/* Titles */
+.gameover-title {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 14px;
+  -fx-text-fill: white;
+}
+.gameover-subtitle {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 10px;
+  -fx-text-fill: white;
+}
+
+/* Buttons */
+.action-button {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 16px;
+  -fx-background-color: #000000;
+  -fx-text-fill: white;
+  -fx-padding: 10px;
+  -fx-border-color: white;
+  -fx-border-width: 2px;
+  -fx-transition: all 0.5s ease;
+}
+.action-button:hover {
+  -fx-background-color: #808080;
+  -fx-text-fill: black;
+}
+
+
+
 
 
 

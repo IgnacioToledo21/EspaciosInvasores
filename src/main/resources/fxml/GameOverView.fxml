@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" styleClass="gameover-pane">
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label styleClass="gameover-title" text="💀 ¡Game Over! 💀" />
+            <Label styleClass="gameover-subtitle" text="¿Quieres reiniciar la partida?" />
+            <Button fx:id="restartButton" styleClass="action-button" text="Reiniciar" minWidth="250" onAction="#onRestartButtonAction" />
+            <Button fx:id="exitButton" styleClass="action-button" text="Salir" minWidth="250" onAction="#onExitButtonAction" />
+        </VBox>
+    </center>
+</BorderPane>

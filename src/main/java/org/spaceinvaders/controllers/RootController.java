@@ -371,28 +371,42 @@ public class RootController implements Initializable {
     }
 
     private void gameOver() {
-        gameOver = true; // ✅ Evita que el bucle de actualización siga corriendo
-        enemyManager.stopEnemyShooting(); // ✅ Detiene los disparos enemigos
+        gameOver = true; // Evita que el bucle de actualización siga corriendo
+        enemyManager.stopEnemyShooting(); // Detiene los disparos enemigos
 
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Fin del Juego");
-            alert.setHeaderText("💀 Has perdido 💀");
-            alert.setContentText("¿Quieres reiniciar la partida?");
+            try {
+                // Cargar la vista personalizada de Game Over
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameOverView.fxml"));
+                GameOverController controller = new GameOverController();
+                loader.setController(controller);
 
-            ButtonType restartButton = new ButtonType("Reiniciar");
-            ButtonType exitButton = new ButtonType("Salir");
+                Parent gameOverRoot = loader.load();
 
-            alert.getButtonTypes().setAll(restartButton, exitButton);
-            Optional<ButtonType> result = alert.showAndWait();
+                // Crear la nueva ventana para Game Over
+                Stage gameOverStage = new Stage();
+                gameOverStage.setTitle("¡Game Over!");
+                gameOverStage.setResizable(false);
 
-            if (result.isPresent() && result.get() == restartButton) {
-                restartGame(); // Reiniciar el juego
-            } else {
-                System.exit(0); // Cerrar la aplicación
+                // Asignar la escena y aplicar la hoja de estilos
+                Scene scene = new Scene(gameOverRoot);
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                gameOverStage.setScene(scene);
+
+                // Inyectar dependencias
+                controller.setRootController(this); // Pasamos el controlador del root
+                controller.setStage(gameOverStage);
+
+                // Mostrar la ventana
+                gameOverStage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
+
+
 
     public void restartGame() {
         stopGameLoop(); // ✅ Detener completamente el bucle de animación ANTES de reiniciar
@@ -404,6 +418,7 @@ public class RootController implements Initializable {
 
         // ✅ Reiniciar todas las entidades
         ship = new Ship(inventory);
+        ship.setRootController(this); // ✅ Asignar el controlador de raíz a la nave
         vidas.reiniciar();
         enemyManager = new EnemyManager(this);
 
