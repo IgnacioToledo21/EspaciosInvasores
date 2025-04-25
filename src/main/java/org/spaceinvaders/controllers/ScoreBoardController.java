@@ -13,9 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.spaceinvaders.entities.Contador;
-import org.spaceinvaders.entities.ScoreEntry;
-import org.spaceinvaders.entities.ScoreManager;
+import org.spaceinvaders.models.Contador;
+import org.spaceinvaders.models.ScoreEntry;
+import org.spaceinvaders.models.ScoreManager;
 
 import java.io.*;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

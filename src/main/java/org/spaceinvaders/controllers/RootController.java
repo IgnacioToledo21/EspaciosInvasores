@@ -19,7 +19,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.spaceinvaders.entities.*;
+import org.spaceinvaders.models.*;
 import org.spaceinvaders.utils.MusicManager;
 
 import java.io.IOException;

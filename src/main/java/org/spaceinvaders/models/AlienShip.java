@@ -1,11 +1,9 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.geometry.Rectangle2D;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class AlienShip {

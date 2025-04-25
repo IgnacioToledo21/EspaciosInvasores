@@ -1,7 +1,6 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 import com.google.gson.*;
-import javafx.beans.property.*;
 
 import java.lang.reflect.Type;
 

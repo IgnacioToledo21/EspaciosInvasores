@@ -1,4 +1,4 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

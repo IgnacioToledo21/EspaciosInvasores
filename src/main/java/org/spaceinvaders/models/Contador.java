@@ -1,4 +1,4 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 public class Contador {
     private long startTime;

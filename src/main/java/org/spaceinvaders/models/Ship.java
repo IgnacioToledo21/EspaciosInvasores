@@ -1,4 +1,4 @@
-package org.spaceinvaders.entities;
+package org.spaceinvaders.models;
 
 import javafx.application.Platform;
 import javafx.geometry.BoundingBox;
@@ -105,7 +105,6 @@ public class Ship {
         } else {
             double x0 = x + (shipW / 2) - (projW / 2);
             projectiles.add(new Projectile(x0, y0));
-            System.out.println("[DEBUG] Added ONE projectile at x0=" + x0);
         }
 
         SoundManager.play(SoundManager.Sound.SHOT);
@@ -122,7 +121,6 @@ public class Ship {
 
             inventory.useBomb(); // Asegura que la bomba se elimine del inventario
             bomb.setImage(bombSprite);
-            SoundManager.play(SoundManager.Sound.BOMB);
             System.out.println("🔥 Bomba lanzada y eliminada del inventario.");
         } else {
             System.out.println("🚫 No hay bomba en el inventario.");
@@ -146,6 +144,7 @@ public class Ship {
             for (Enemy enemy : enemies) {
                 if (bomb.getBounds().intersects(new BoundingBox(enemy.getX(), enemy.getY(), enemy.getBounds().getWidth(), enemy.getBounds().getHeight()))) {
                     activateBomb(bomb.getX(), bomb.getY()); // Llamar a la explosión en la ubicación de la bomba
+                    SoundManager.play(SoundManager.Sound.BOMB);
                     bombIterator.remove();
                     break;
                 }

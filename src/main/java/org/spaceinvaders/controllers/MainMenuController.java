@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.spaceinvaders.entities.ScoreEntry;
-import org.spaceinvaders.entities.ScoreManager;
+import org.spaceinvaders.models.ScoreEntry;
+import org.spaceinvaders.models.ScoreManager;
 import org.spaceinvaders.utils.MusicManager;
 
 import java.io.IOException;
