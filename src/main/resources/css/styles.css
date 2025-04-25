@@ -103,7 +103,7 @@
 }
 
 /* Estilo para los Botones */
-#PlayButton, #ScoreButton, #ExitButton, #SalirButton, #DescargarDiplomaButton, #ReiniciarJuegoButton, #VolverButton {
+#PlayButton, #ScoreButton, #ExitButton, #SalirButton, #DescargarDiplomaButton, #ReiniciarJuegoButton, #VolverButton, #settingsButton {
     -fx-font-family: 'Press Start 2P Regular';
     -fx-font-size: 16px;
     -fx-background-color: #000000; /* Fondo negro */
@@ -114,7 +114,7 @@
     -fx-transition: all 0.5s ease;
 }
 
-#PlayButton:hover, #ScoreButton:hover, #ExitButton:hover, #SalirButton:hover, #DescargarDiplomaButton:hover, #ReiniciarJuegoButton:hover, #VolverButton:hover  {
+#PlayButton:hover, #ScoreButton:hover, #ExitButton:hover, #SalirButton:hover, #DescargarDiplomaButton:hover, #ReiniciarJuegoButton:hover, #VolverButton:hover, #settingsButton:hover  {
     -fx-background-color: #808080; /* Fondo gris */
     -fx-text-fill: black; /* Cambiar el color del texto al pasar el ratón */
 }
@@ -235,6 +235,53 @@
   -fx-text-fill: black;
 }
 
+/* settings.css */
+
+/* Panel de ajustes */
+.settings-pane {
+  -fx-background-color: black;
+  -fx-padding: 40;
+}
+
+/* Título principal */
+.settings-title {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 20px;
+  -fx-text-fill: white;
+}
+
+/* Subtítulos (labels de sliders) */
+.settings-subtitle {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 14px;
+  -fx-text-fill: white;
+}
+
+/* Sliders */
+.settings-slider .track {
+  -fx-background-color: #444;
+}
+.settings-slider .thumb {
+  -fx-background-color: white;
+  -fx-border-color: black;
+  -fx-border-width: 2px;
+}
+
+/* Botones de acción */
+.action-button {
+  -fx-font-family: 'Press Start 2P Regular';
+  -fx-font-size: 16px;
+  -fx-background-color: #000000;
+  -fx-text-fill: white;
+  -fx-padding: 10px;
+  -fx-border-color: white;
+  -fx-border-width: 2px;
+  -fx-transition: all 0.5s ease;
+}
+.action-button:hover {
+  -fx-background-color: #808080;
+  -fx-text-fill: black;
+}
 
 
 

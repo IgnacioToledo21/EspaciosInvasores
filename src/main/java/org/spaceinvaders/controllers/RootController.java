@@ -381,6 +381,8 @@ public class RootController implements Initializable {
                 GameOverController controller = new GameOverController();
                 loader.setController(controller);
 
+                MusicManager.play(MusicManager.Track.GAMEOVER); // Reproducir música de Game Over
+
                 Parent gameOverRoot = loader.load();
 
                 // Crear la nueva ventana para Game Over

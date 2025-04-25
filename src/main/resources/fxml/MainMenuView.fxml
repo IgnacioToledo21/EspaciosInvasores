@@ -27,6 +27,7 @@
             </HBox>
             <Button fx:id="PlayButton" mnemonicParsing="false" onAction="#onPlayButtonAction" text="Jugar!" />
             <Button fx:id="ScoreButton" mnemonicParsing="false" onAction="#onScoreButtonAction" text="Puntuaciones" />
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#onSettingsButtonAction" text="Ajustes"/>
             <Button fx:id="ExitButton" mnemonicParsing="false" onAction="#onExitButtonAction" text="Salir" />
          </children>
       </VBox>
@@ -35,7 +36,7 @@
       <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="ScoretopLabel" text="Mejores jugadores" />
-            <TableView fx:id="LittleScoreTable">
+            <TableView fx:id="LittleScoreTable" prefHeight="600">
               <columns>
                 <TableColumn fx:id="ScoreColumn" prefWidth="75.0" text="Nombre" />
                 <TableColumn fx:id="NameColumn" prefWidth="75.0" text="Puntuacion" />

@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,6 +23,7 @@ import javafx.util.Duration;
 import org.spaceinvaders.models.ScoreEntry;
 import org.spaceinvaders.models.ScoreManager;
 import org.spaceinvaders.utils.MusicManager;
+import org.spaceinvaders.utils.SoundManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +40,9 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Button ScoreButton;
+
+    @FXML
+    private Button settingsButton;
 
     @FXML
     private BorderPane root;
@@ -360,5 +365,53 @@ public class MainMenuController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    void onSettingsButtonAction(ActionEvent event) {
+        try {
+            // 1) Crear el FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SettingsView.fxml"));
+
+            // 2) Instanciar el SettingsController y asignarlo al loader
+            SettingsController settingsController = new SettingsController();
+            loader.setController(settingsController);
+
+            // 3) Cargar la vista
+            Parent settingsRoot = loader.load();
+
+            // 4) Crear y configurar el Stage
+            Stage settingsStage = new Stage();
+            settingsStage.setTitle("Ajustes de sonido");
+            settingsStage.setResizable(false);
+            Scene scene = new Scene(settingsRoot);
+            scene.getStylesheets().addAll(
+                    getClass().getResource("/css/styles.css").toExternalForm()
+            );
+            settingsStage.setScene(scene);
+
+            // 5) Inyectar el Stage y el listener en el controlador
+            settingsController.setSettingsStage(settingsStage);
+            settingsController.setSettingsListener((musicVol, effectsVol) -> {
+                MusicManager.setVolume(musicVol);
+                SoundManager.setVolume(effectsVol);
+            });
+
+            // 6) Inicializar sliders
+            settingsController.setInitialVolumes(
+                    MusicManager.getVolume(),
+                    SoundManager.getVolume()
+            );
+
+            // 7) Mostrar la ventana
+            settingsStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 
 }
