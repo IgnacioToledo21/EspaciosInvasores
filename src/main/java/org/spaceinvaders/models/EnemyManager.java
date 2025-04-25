@@ -2,6 +2,7 @@ package org.spaceinvaders.models;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.spaceinvaders.controllers.RootController;
 import org.spaceinvaders.utils.SoundManager;
 
@@ -240,6 +241,25 @@ public class EnemyManager {
         // 2) Dibujar jefe si existe
         if (boss != null) {
             boss.draw(gc);
+
+            // ——— Aquí la barra de vida ———
+            double barWidth  = 100;                                   // ancho igual al sprite
+            double barHeight = 8;                                     // alto de la barra
+            double bx = boss.getX();                                  // x del boss
+            double by = boss.getY() - barHeight - 5;                  // y justo por encima
+
+            // 1) Fondo gris
+            gc.setFill(Color.GRAY);
+            gc.fillRect(bx, by, barWidth, barHeight);
+
+            // 2) Vida restante en verde
+            double ratio = boss.getVida() / (double) boss.getMaxVida();
+            gc.setFill(Color.LIME);
+            gc.fillRect(bx, by, barWidth * ratio, barHeight);
+
+            // 3) Borde negro
+            gc.setStroke(Color.BLACK);
+            gc.strokeRect(bx, by, barWidth, barHeight);
         }
 
         // 3) Dibujar y actualizar naves alienígenas especiales

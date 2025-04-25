@@ -498,7 +498,13 @@ public class RootController implements Initializable {
                     root.setCenter(scoreBoardController.getRoot());
                 });
 
-                // 6) Mostrar la ventana de victoria
+                // 6) Interceptar el cierre de la ventana (la “X”)
+                victoryStage.setOnCloseRequest(event -> {
+                    // Ejecuta la misma lógica que el botón de Salir
+                    System.exit(0);
+                });
+
+                // 7) Mostrar la ventana de victoria
                 victoryStage.show();
 
             } catch (IOException e) {
@@ -506,6 +512,7 @@ public class RootController implements Initializable {
             }
         });
     }
+
 
     public String getPlayerName() {
         return playerName;
