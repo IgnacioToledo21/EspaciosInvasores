@@ -109,8 +109,7 @@ public class Boss {
     }
 
     public int getPoints() {
-        // Puntos podría escalar según fases
-        return 5000 * maxVida;
+        return 1000000000;
     }
 
     /**

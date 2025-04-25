@@ -71,6 +71,9 @@ public class VictoryController {
             a.showAndWait();
         }
 
+        scoreBoardController.setCurrentPlayerName(playerName);
+
+
         // 5) Mostrar la tabla de puntuaciones
         if (onScoreViewRequested != null) {
             onScoreViewRequested.run();

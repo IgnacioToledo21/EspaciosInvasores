@@ -65,6 +65,14 @@ public class ScoreBoardController implements Initializable {
     private boolean showRestartButton = true; // Nueva propiedad
     private boolean showDownloadButton = true; // New property
 
+    /** Nombre del jugador que acaba de entrar */
+    private String currentPlayerName;
+
+    /** Setter para inyectar el nombre desde VictoryController */
+    public void setCurrentPlayerName(String name) {
+        this.currentPlayerName = name;
+    }
+
 
     public void setShowRestartButton(boolean show) {
         this.showRestartButton = show;
@@ -300,7 +308,7 @@ public class ScoreBoardController implements Initializable {
             return;
         }
 
-        String playerName = rootController.getPlayerName();  // Obtener el nombre del jugador
+        String playerName = currentPlayerName;
 
         // Obtener el tiempo total del contador
         Contador contador = rootController.getContador();
