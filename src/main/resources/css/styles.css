@@ -103,7 +103,7 @@
 }
 
 /* Estilo para los Botones */
-#PlayButton, #ScoreButton, #ExitButton, #SalirButton, #DescargarDiplomaButton, #ReiniciarJuegoButton, #VolverButton, #settingsButton {
+#PlayButton, #ScoreButton, #ExitButton, #SalirButton, #DescargarDiplomaButton, #ReiniciarJuegoButton, #VolverButton, #settingsButton, #clearButton {
     -fx-font-family: 'Press Start 2P Regular';
     -fx-font-size: 16px;
     -fx-background-color: #000000; /* Fondo negro */
@@ -114,7 +114,7 @@
     -fx-transition: all 0.5s ease;
 }
 
-#PlayButton:hover, #ScoreButton:hover, #ExitButton:hover, #SalirButton:hover, #DescargarDiplomaButton:hover, #ReiniciarJuegoButton:hover, #VolverButton:hover, #settingsButton:hover  {
+#PlayButton:hover, #ScoreButton:hover, #ExitButton:hover, #SalirButton:hover, #DescargarDiplomaButton:hover, #ReiniciarJuegoButton:hover, #VolverButton:hover, #settingsButton:hover, #clearButton:hover  {
     -fx-background-color: #808080; /* Fondo gris */
     -fx-text-fill: black; /* Cambiar el color del texto al pasar el ratón */
 }

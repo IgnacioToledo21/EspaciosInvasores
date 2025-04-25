@@ -2,10 +2,11 @@ package org.spaceinvaders.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.spaceinvaders.models.ScoreManager;
+
+import java.util.Optional;
 
 public class SettingsController {
 
@@ -26,6 +27,12 @@ public class SettingsController {
 
     @FXML
     private Label soundLabel;
+
+    @FXML
+    private Label clearLabel;
+
+    @FXML
+    private Button clearButton;
 
     private Stage settingsStage;
     private SettingsListener settingsListener;
@@ -53,6 +60,25 @@ public class SettingsController {
             settingsStage.close();
         }
     }
+
+    @FXML
+    void onResetButtonAction(ActionEvent event) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar eliminación");
+        confirm.setHeaderText("¿Deseas borrar todas las puntuaciones?");
+        confirm.setContentText("Esta acción no se puede deshacer.");
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            ScoreManager.clearScores();  // Metodo en tu clase ScoreManager
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Puntuaciones eliminadas");
+            success.setHeaderText(null);
+            success.setContentText("Todas las puntuaciones han sido eliminadas.");
+            success.showAndWait();
+        }
+    }
+
 
     /**
      * Establece los valores iniciales de los sliders de volumen.

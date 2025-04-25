@@ -57,4 +57,9 @@ public class ScoreManager {
             e.printStackTrace();
         }
     }
+
+    public static void clearScores() {
+        saveScores(new ArrayList<>());  // Esto escribirá "[]" en scores.json
+    }
+
 }
