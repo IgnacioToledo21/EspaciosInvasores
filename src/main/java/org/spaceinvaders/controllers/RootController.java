@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -449,56 +451,45 @@ public class RootController implements Initializable {
         contador.stop();
 
         Platform.runLater(() -> {
-            MusicManager.play(MusicManager.Track.WIN); // ✅ Reproducir música de victoria
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("¡Enhorabuena!");
-            alert.setHeaderText("🎉 Has derrotado al Boss 🎉");
-            alert.setContentText("¿Quieres revisar la puntuación o salir del juego?");
+            try {
+                // 1) Reproducir música de victoria
+                MusicManager.play(MusicManager.Track.WIN);
 
-            // Obtener el DialogPane del Alert y aplicar el estilo
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.setStyle("-fx-font-family: 'Press Start 2P Regular'; -fx-font-size: 10px;");
+                // 2) Preparar FXMLLoader y controlador manualmente
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/VictoryView.fxml"));
+                VictoryController controller = new VictoryController();
+                loader.setController(controller);
+                Parent victoryRoot = loader.load();
 
-            ButtonType reviewButton = new ButtonType("Revisar Puntuaciones");
-            ButtonType exitButton = new ButtonType("Salir del juego");
+                // 3) Crear y configurar la nueva ventana (Stage)
+                Stage victoryStage = new Stage();
+                victoryStage.setTitle("¡Enhorabuena!");
+                victoryStage.setResizable(false);
 
-            alert.getButtonTypes().setAll(reviewButton, exitButton);
-            Optional<ButtonType> result = alert.showAndWait();
+                // 4) Asignar escena y aplicar tu hoja de estilos
+                Scene scene = new Scene(victoryRoot);
+                scene.getStylesheets().add(
+                        getClass().getResource("/css/styles.css").toExternalForm()
+                );
+                victoryStage.setScene(scene);
 
-            if (result.isPresent() && result.get() == reviewButton) {
-                String playerName = promptForName(); // Metodo para pedir el nombre del jugador
-                int finalScore = ship.getScore();    // Puntuación final del jugador
-                int vidasRestantes = vidas.getVidas(); // Vidas restantes al derrotar al Boss
+                // 5) Inyectar dependencias en el controlador
+                controller.setShip(ship);
+                controller.setVidas(vidas);
+                controller.setScoreBoardController(scoreBoardController);
+                controller.setStage(victoryStage);
+                controller.setOnScoreViewRequested(() -> {
+                    // Al revisar puntuaciones, reemplaza el centro con la tabla
+                    root.setCenter(scoreBoardController.getRoot());
+                });
 
-                System.out.println("🏆 Puntuación TOTAL FINAL: " + finalScore);
+                // 6) Mostrar la ventana de victoria
+                victoryStage.show();
 
-                // Crear el objeto ScoreEntry con la puntuación final
-                ScoreEntry newScore = new ScoreEntry(playerName, finalScore, vidasRestantes);
-
-                // Añadir el ScoreEntry al controlador de puntuaciones (ScoreBoardController)
-                scoreBoardController.addScoreEntry(newScore);
-
-                // Guardar las puntuaciones en el archivo JSON
-                ScoreManager.saveScores(scoreBoardController.getScoreList());
-
-                // Mostrar la pantalla de puntuaciones
-                root.setCenter(scoreBoardController.getRoot());
-            } else if (result.isPresent() && result.get() == exitButton) {
-                System.exit(0);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
-    }
-
-    //SoLicitar y almacenar el nombre del jugador
-    private String promptForName() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nombre del Jugador");
-        dialog.setHeaderText("Introduce tu nombre para la tabla de puntuaciones:");
-        dialog.setContentText("Nombre:");
-
-        Optional<String> result = dialog.showAndWait();
-        playerName = result.orElse("Jugador Anónimo"); // Almacenar el nombre del jugador
-        return playerName;
     }
 
     public String getPlayerName() {

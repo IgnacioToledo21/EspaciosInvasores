@@ -33,7 +33,7 @@ public class Boss {
     }
 
     public int getPoints() {
-        return 1000000; //Cambiar para pruebas
+        return 100000; //Cambiar para pruebas
     }
 
     // Disparar proyectil

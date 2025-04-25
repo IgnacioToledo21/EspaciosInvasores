@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" styleClass="victory-pane">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label text="🎉 Has derrotado al Boss 🎉" styleClass="victory-title" />
+            <Label text="¿Quieres revisar la puntuación o salir del juego?" styleClass="victory-subtitle" />
+
+            <Button fx:id="reviewButton" text="Revisar Puntuaciones" styleClass="action-button" onAction="#onReviewButtonAction" />
+            <Button fx:id="exitButton" text="Salir del Juego" styleClass="action-button" onAction="#onExitButtonAction" />
+        </VBox>
+    </center>
+
+</BorderPane>
