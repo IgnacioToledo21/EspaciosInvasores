@@ -569,6 +569,11 @@ public class RootController implements Initializable {
             if (!enemyManager.hayBoss() && enemyManager.getEnemies().isEmpty()) {
                 enemyManager.createEnemies(); // ✅ Generar enemigos si no hay ninguno
             }
+
+            ship.getProjectiles().clear();
+            enemyManager.getProjectiles().clear();
+            enemyManager.clearSpecialAliens();
+
             contador.start();
             startGameLoop(); // ✅ Iniciar el juego
         });
@@ -589,6 +594,12 @@ public class RootController implements Initializable {
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
                 reiniciarMuros(); // ✅ Reiniciar los muros de defensa
+
+                ship.getProjectiles().clear();
+                enemyManager.getProjectiles().clear();
+                enemyManager.clearSpecialAliens();
+
+
                 enemyManager.iniciarSiguienteOleada(); // ✅ Generar nuevos enemigos
                 resumeGame(); // ✅ Reanudar el juego
             });
@@ -611,6 +622,11 @@ public class RootController implements Initializable {
                 root.setCenter(gameCanvas); // ✅ Asegurar que el Canvas se mantenga visible
 
                 reiniciarMuros(); // ✅ Reiniciar los muros de defensa
+
+                ship.getProjectiles().clear();
+                enemyManager.getProjectiles().clear();
+                enemyManager.clearSpecialAliens();
+
                 enemyManager.iniciarBossFinal(); // ✅ Llamar metodo para generar el Boss
                 resumeGame(); // ✅ Reanudar el juego
             });

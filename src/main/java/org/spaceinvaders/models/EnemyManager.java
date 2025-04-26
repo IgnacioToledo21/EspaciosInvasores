@@ -390,4 +390,10 @@ public class EnemyManager {
         enemies.remove(enemy);
     }
 
+    public void clearSpecialAliens() {
+        specialAlien.clear();
+        alienSpawned = false;
+    }
+
+
 }

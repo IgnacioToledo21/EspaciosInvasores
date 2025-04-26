@@ -429,7 +429,7 @@ public class ScoreBoardController implements Initializable {
             timeContent.add(new Chunk(elapsedTime, playerNameFont));
             document.add(timeContent);
 
-            document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"));
+            document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n"));
 
             // Agregar mensaje recordatorio
             Paragraph finalContent = new Paragraph();
@@ -449,48 +449,6 @@ public class ScoreBoardController implements Initializable {
             border.setBorderWidth(2);
             border.setBorderColor(BaseColor.LIGHT_GRAY);
             document.add(border);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image = Image.getInstance(getClass().getResource("/images/naves/NavePrincipal.png"));
-            image.setAlignment(Image.ALIGN_CENTER);
-            image.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
-            image.setAbsolutePosition(50, 600);
-            document.add(image);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image2 = Image.getInstance(getClass().getResource("/images/enemigos/Enemigo Tanque-1.png.png"));
-            image2.setAlignment(Image.ALIGN_CENTER);
-            image2.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
-            image2.setAbsolutePosition(50, 200);
-            document.add(image2);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image3 = Image.getInstance(getClass().getResource("/images/enemigos/Enemigocaballero1png.png"));
-            image3.setAlignment(Image.ALIGN_CENTER);
-            image3.scaleToFit(50, 50); // Ajustar el tamaño de la imagen
-            image3.setAbsolutePosition(500, 600);
-            document.add(image3);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image4 = Image.getInstance(getClass().getResource("/images/bosses/Primer Boss-1.png.png"));
-            image4.setAlignment(Image.ALIGN_CENTER);
-            image4.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
-            image4.setAbsolutePosition(450, 300);
-            document.add(image4);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image5 = Image.getInstance(getClass().getResource("/images/projectiles/Bala aliada-1.png.png"));
-            image5.setAlignment(Image.ALIGN_CENTER);
-            image5.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
-            image5.setAbsolutePosition(450, 250);
-            document.add(image5);
-
-            // Cargar y agregar la imagen de la nave principal
-            Image image6 = Image.getInstance(getClass().getResource("/images/projectiles/Bala aliada-1.png.png"));
-            image6.setAlignment(Image.ALIGN_CENTER);
-            image6.scaleToFit(100, 100); // Ajustar el tamaño de la imagen
-            image6.setAbsolutePosition(470, 270);
-            document.add(image6);
 
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
