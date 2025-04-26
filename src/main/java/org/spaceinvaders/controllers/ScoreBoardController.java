@@ -19,6 +19,7 @@ import org.spaceinvaders.models.ScoreManager;
 
 import java.io.*;
 import java.net.URL;
+import java.rmi.NotBoundException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -61,6 +62,9 @@ public class ScoreBoardController implements Initializable {
 
     @FXML
     private Button VolverButton;
+
+    @FXML
+    private Button GenerarEjemploButton;
 
     private boolean showRestartButton = true; // Nueva propiedad
     private boolean showDownloadButton = true; // New property
@@ -425,7 +429,6 @@ public class ScoreBoardController implements Initializable {
             timeContent.add(new Chunk(elapsedTime, playerNameFont));
             document.add(timeContent);
 
-            // Agregar espacio
             document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"));
 
             // Agregar mensaje recordatorio
@@ -436,7 +439,7 @@ public class ScoreBoardController implements Initializable {
             document.add(finalContent);
 
             // Crear y agregar la firma
-            Paragraph signature = new Paragraph("Espacios Invasores", new Font(baseFont, 18, Font.NORMAL, BaseColor.BLUE));
+            Paragraph signature = new Paragraph("Espacios Invasores", new Font(baseFont, 16, Font.NORMAL, BaseColor.BLUE));
             signature.setAlignment(Element.ALIGN_RIGHT);
             document.add(signature);
 
@@ -540,4 +543,5 @@ public class ScoreBoardController implements Initializable {
         Platform.exit();
         System.exit(0);
     }
+
 }
