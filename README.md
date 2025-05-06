@@ -33,6 +33,11 @@ Este proyecto recrea la experiencia clásica del Space Invaders, con mecánicas 
 - CSS
 - Maven
 
+## Descargar el juego
+
+Puedes descargar la versión para Windows haciendo clic en el siguiente enlace:  
+[Descargar Espacios Invasores (.exe)](https://github.com/IgnacioToledo21/EspaciosInvasores/releases/latest)
+
 ## 🧩 Instalación y ejecución
 
 Sigue estos pasos para ejecutar el proyecto en tu máquina local:
