@@ -1,6 +1,6 @@
-# 👾 Space Invaders - Proyecto DAM
+# 👾 Espacios Invasores - Proyecto DAM
 
-Bienvenido a **Space Invaders**, una versión moderna del clásico juego arcade, desarrollada como parte de mi formación como **Técnico Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)**.
+Bienvenido a **Espacios Invasores**, una versión moderna del clásico juego arcade, desarrollada como parte de mi formación como **Técnico Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)**.
 
 ## 🚀 Descripción
 
